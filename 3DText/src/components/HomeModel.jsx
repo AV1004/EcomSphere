@@ -80,7 +80,7 @@ export function HomeModel({ html, ...props }) {
               <group name="Plane002_1" position={[-1.574, 0.399, 0.554]}>
                 {html && (
                   <OverlayItem
-                    scale={6}
+                    scale={5}
                     position-x={0.3}
                     position-y={2}
                     position-z={0.2}

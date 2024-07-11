@@ -14,6 +14,7 @@ import { Color } from "three";
 import { currentPageAtom } from "./UI";
 import { useAtom } from "jotai";
 import { useFrame } from "@react-three/fiber";
+import { motion } from "framer-motion-3d";
 
 const bloomColor = new Color("#fff");
 bloomColor.multiplyScalar(1.5);
@@ -65,44 +66,59 @@ export const Experience = () => {
 
   return (
     <>
-      <CameraControls ref={controls} />
+      <CameraControls ref={controls} enabled={true} />
       <mesh ref={meshFitCameraHome} position-z={1.5} visible={false}>
         <boxGeometry args={[9.5, 2, 2]} />
         <meshBasicMaterial color={"orange"} transparent opacity={0.5} />
       </mesh>
-      <Text
-        font={"fonts/Poppins-Black.ttf"}
+      <motion.group
+        animate={{
+          rotateY: currentPage === "home" ? degToRad(30) : 0,
+        }}
+        transition={{
+          duration: 2,
+        }}
         position-x={-1.3}
         position-y={-0.5}
         position-z={1}
-        lineHeight={0.8}
-        textAlign="center"
-        rotation-y={degToRad(30)}
-        anchorY={"bottom"}
+        // rotation-y={degToRad(30)}
       >
-        WELCOME TO{"\n"}ECOMSPHERE
-        <meshBasicMaterial
-          color={bloomColor}
-          toneMapped={false}
-          ref={textMaterial}
+        <Text
+          font={"fonts/Poppins-Black.ttf"}
+          lineHeight={0.8}
+          textAlign="center"
+          anchorY={"bottom"}
         >
-          <RenderTexture attach={"map"}>
-            <color attach={"background"} args={["#fff"]} />
-            <Environment preset="sunset" />
-            {/* <ambientLight /> */}
-            <Float floatIntensity={4} rotationIntensity={5}>
-              <HomeModel
-                scale={2}
-                rotation-y={-degToRad(25)}
-                rotation-x={degToRad(40)}
-                position-y={-2}
-              />
-            </Float>
-          </RenderTexture>
-        </meshBasicMaterial>
-      </Text>
-      <group
-        rotation-y={degToRad(-25)}
+          WELCOME TO{"\n"}ECOMSPHERE
+          <meshBasicMaterial
+            color={bloomColor}
+            toneMapped={false}
+            ref={textMaterial}
+          >
+            <RenderTexture attach={"map"}>
+              <color attach={"background"} args={["#fff"]} />
+              <Environment preset="sunset" />
+              {/* <ambientLight /> */}
+              <Float floatIntensity={4} rotationIntensity={5}>
+                <HomeModel
+                  scale={2}
+                  rotation-y={-degToRad(25)}
+                  rotation-x={degToRad(40)}
+                  position-y={-2}
+                />
+              </Float>
+            </RenderTexture>
+          </meshBasicMaterial>
+        </Text>
+      </motion.group>
+      <motion.group
+        animate={{
+          rotateY: currentPage === "home" ? degToRad(-25) : 0,
+        }}
+        transition={{
+          duration: 2,
+        }}
+        // rotation-y={}
         position-x={4.5}
         position-z={-1}
         position-y={-1.1}
@@ -110,14 +126,15 @@ export const Experience = () => {
         <HomeModel scale={1.3} html />
         <mesh
           ref={meshFitCameraStore}
-          position-x={0.2}
+          position-x={-1}
           position-y={1.3}
+          position-z={-2.3}
           visible={false}
         >
           <boxGeometry args={[5, 1, 2]} />
           <meshBasicMaterial color={"red"} transparent opacity={0.5} />
         </mesh>
-      </group>
+      </motion.group>
       <mesh position-y={-0.48} rotation-x={-Math.PI / 2}>
         <planeGeometry args={[100, 100]} />
         <MeshReflectorMaterial
