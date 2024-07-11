@@ -3,9 +3,9 @@ import {
   Environment,
   Float,
   MeshReflectorMaterial,
-  OrbitControls,
   RenderTexture,
   Text,
+  useFont,
 } from "@react-three/drei";
 import { HomeModel } from "./HomeModel";
 import { degToRad } from "three/src/math/MathUtils.js";
@@ -17,19 +17,33 @@ bloomColor.multiplyScalar(1.5);
 
 export const Experience = () => {
   const controls = useRef();
+  const meshFitCameraHome = useRef();
 
   const intro = () => {
     controls.current.dolly(-22);
     controls.current.smoothTime = 1.6;
-    controls.current.dolly(22, true);
+    fitCamera();
+  };
+
+  const fitCamera = async () => {
+    controls.current.fitToBox(meshFitCameraHome.current, true);
   };
 
   useEffect(() => {
     intro();
-  });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("resize", fitCamera);
+    return () => window.removeEventListener("resize", fitCamera);
+  }, []);
   return (
     <>
       <CameraControls ref={controls} />
+      <mesh ref={meshFitCameraHome} position-z={1.5} visible={false}>
+        <boxGeometry args={[9.5, 2, 2]} />
+        <meshBasicMaterial color={"orange"} transparent opacity={0.5} />
+      </mesh>
       <Text
         font={"fonts/Poppins-Black.ttf"}
         position-x={-1.3}
@@ -44,8 +58,8 @@ export const Experience = () => {
         <meshBasicMaterial color={bloomColor} toneMapped={false}>
           <RenderTexture attach={"map"}>
             <color attach={"background"} args={["#fff"]} />
-            {/* <Environment preset="sunset" /> */}
-            <ambientLight />
+            <Environment preset="sunset" />
+            {/* <ambientLight /> */}
             <Float floatIntensity={4} rotationIntensity={5}>
               <HomeModel
                 scale={2}
@@ -83,7 +97,9 @@ export const Experience = () => {
         />
       </mesh>
       <Environment preset="sunset" />
-      <ambientLight />
+      {/* <ambientLight /> */}
     </>
   );
 };
+
+useFont.preload("fonts/Poppins-Black.ttf");
