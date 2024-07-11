@@ -4,9 +4,44 @@ Command: npx gltfjsx@6.2.18 .\public\models\EcomSphereHome.glb -k -K
 */
 
 import React, { useRef } from "react";
-import { useGLTF } from "@react-three/drei";
+import { Html, useGLTF } from "@react-three/drei";
+import { useAtom } from "jotai";
+import { currentPageAtom } from "./UI";
+import { degToRad } from "three/src/math/MathUtils.js";
 
-export function HomeModel(props) {
+const OverlayItem = ({
+  className = "",
+  title,
+  description,
+  price,
+  bgColor,
+  ...props
+}) => {
+  const [currentPage] = useAtom(currentPageAtom);
+  return (
+    <Html
+      transform
+      distanceFactor={1.2}
+      center
+      className={`w-48 rounded-md overflow-hidden ${
+        currentPage === "store" ? "" : "opacity-0"
+      } transition-opacity duration-1000 ${className}`}
+      {...props}
+    >
+      <div className="bg-white bg-opacity-50 backdrop-blur-lg text-xs p-2 w-full">
+        <h2 className="font-bold">{title}</h2>
+        <p>{description}</p>
+      </div>
+      <button
+        className={`${bgColor} hover:bg-opacity-50 transition-colors duration-500 px-4 py-2 font-bold text-white w-full text-xs`}
+      >
+        Go -&gt;
+      </button>
+    </Html>
+  );
+};
+
+export function HomeModel({ html, ...props }) {
   const { nodes, materials } = useGLTF("models/EcomSphereHome.glb");
   return (
     <group {...props} dispose={null}>
@@ -43,6 +78,19 @@ export function HomeModel(props) {
               rotation={[Math.PI / 2, 0, 0]}
             >
               <group name="Plane002_1" position={[-1.574, 0.399, 0.554]}>
+                {html && (
+                  <OverlayItem
+                    scale={6}
+                    position-x={0.3}
+                    position-y={2}
+                    position-z={0.2}
+                    rotation-y={degToRad(-90)}
+                    title={"Go to Cart 🛒"}
+                    // description={"Your Cart is empty!"}
+                    bgColor={"bg-green-500"}
+                    className="transition delay-300"
+                  />
+                )}
                 <mesh
                   name="Object_10"
                   geometry={nodes.Object_10.geometry}
@@ -285,4 +333,4 @@ export function HomeModel(props) {
   );
 }
 
-useGLTF.preload("models//EcomSphereHome.glb");
+useGLTF.preload("models/EcomSphereHome.glb");
