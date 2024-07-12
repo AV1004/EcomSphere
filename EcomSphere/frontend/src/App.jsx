@@ -1,23 +1,22 @@
-import { Canvas } from "@react-three/fiber";
-import { Experience } from "./components/Experience";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { Suspense } from "react";
-import { UI } from "./components/UI";
+import { Route, Routes } from "react-router-dom";
+import { HomePage } from "./components/HomePage";
+import { Root } from "./components/Root";
+import { useState } from "react";
+import { SignUp } from "./components/SignUp";
+import { SignIn } from "./components/SignIn";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
     <>
-      <Canvas shadows camera={{ position: [0, 0, 8], fov: 42 }}>
-        <color attach="background" args={["#171720"]} />
-        <fog attach={"fog"} args={["#171720", 10, 30]} />
-        <Suspense>
-          <Experience />
-        </Suspense>
-        <EffectComposer>
-          <Bloom mipmapBlur intensity={1} />
-        </EffectComposer>
-      </Canvas>
-      <UI />
+      <Routes>
+        <Route path="/" element={<Root isAuthenticated={isAuthenticated} />}>
+          <Route index={true} element={<HomePage />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+        </Route>
+      </Routes>
     </>
   );
 }

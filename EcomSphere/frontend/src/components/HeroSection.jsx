@@ -7,19 +7,19 @@ import {
   Text,
   useFont,
 } from "@react-three/drei";
-import { HomeModel } from "./HomeModel";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import { useEffect, useRef } from "react";
 import { Color } from "three";
-import { currentPageAtom } from "./UI";
 import { useAtom } from "jotai";
 import { useFrame } from "@react-three/fiber";
 import { motion } from "framer-motion-3d";
+import { currentPageAtom } from "./UI";
+import { HomeModel } from "./HomeModel";
 
 const bloomColor = new Color("#fff");
 bloomColor.multiplyScalar(1.5);
 
-export const Experience = () => {
+export const HeroSection = () => {
   const controls = useRef();
   const meshFitCameraHome = useRef();
   const meshFitCameraStore = useRef();
@@ -153,7 +153,6 @@ export const Experience = () => {
         />
       </mesh>
       <Environment preset="sunset" />
-      {/* <ambientLight /> */}
     </>
   );
 };
