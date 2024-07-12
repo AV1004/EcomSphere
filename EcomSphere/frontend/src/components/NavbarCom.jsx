@@ -96,7 +96,7 @@ export const NavbarCom = ({ isAuthenticated }) => {
         </IconButton>
       </div>
       <Collapse open={open}>
-        <div className="mt-2 rounded-xl  flex flex-col items-center justify-center bg-[#171720] py-2">
+        <div className="mt-2 rounded-xl   flex flex-col items-center justify-center bg-[#171720] py-2">
           {isAuthenticated === true ? (
             <div>
               <NavList />
