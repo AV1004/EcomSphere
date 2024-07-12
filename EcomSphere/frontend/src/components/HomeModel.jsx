@@ -4,9 +4,54 @@ Command: npx gltfjsx@6.2.18 .\public\models\EcomSphereHome.glb -k -K
 */
 
 import React, { useRef } from "react";
-import { useGLTF } from "@react-three/drei";
+import { Html, useGLTF } from "@react-three/drei";
+import { useAtom } from "jotai";
+import { currentPageAtom } from "./UI";
+import { degToRad } from "three/src/math/MathUtils.js";
+import { IoIosCreate } from "react-icons/io";
 
-export function HomeModel(props) {
+const OverlayItem = ({
+  className = "",
+  title,
+  description,
+  price,
+  bgColor,
+  Icon,
+  ...props
+}) => {
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+
+  const IconRender = () => {
+    if (Icon === "signup") {
+      return <IoIosCreate size={25} />;
+    }
+  };
+
+  return (
+    <Html
+      transform
+      distanceFactor={1.2}
+      center
+      className={`w-48 rounded-md overflow-hidden ${
+        currentPage === "store" ? "" : "opacity-0"
+      } transition-opacity duration-1000 ${className}`}
+      {...props}
+    >
+      <div className="bg-white bg-opacity-50 backdrop-blur-lg text-xs p-2 w-full">
+        <h2 className="font-bold">{title}</h2>
+        <p>{description}</p>
+      </div>
+      <button
+        className={`${bgColor} hover:bg-opacity-50 transition-colors duration-500 px-4 py-2 justify-center flex font-bold text-white w-full text-xs`}
+      >
+        {/* Go -&gt; */}
+        <IconRender />
+      </button>
+    </Html>
+  );
+};
+
+export function HomeModel({ html, ...props }) {
   const { nodes, materials } = useGLTF("models/EcomSphereHome.glb");
   return (
     <group {...props} dispose={null}>
@@ -36,7 +81,22 @@ export function HomeModel(props) {
           rotation={[-Math.PI / 2, 0, 1.562]}
           scale={0.154}
         >
-          <group name="root" position={[0, -0.015, 0]}>
+          {html && (
+            <OverlayItem
+              scale={5}
+              position-x={0.3}
+              position-y={-0.3}
+              position-z={0.9}
+              rotation-y={degToRad(-90)}
+              rotation-x={degToRad(90)}
+              title={`Sign Up`}
+              Icon={"signup"}
+              description={"Register your self now!"}
+              bgColor={"bg-teal-400"}
+              className="transition delay-300"
+            />
+          )}
+          <group name="root" position={[0, -0.015, 0]} visible={false}>
             <group
               name="GLTF_SceneRootNode"
               position={[-0.063, 0.108, 0]}
