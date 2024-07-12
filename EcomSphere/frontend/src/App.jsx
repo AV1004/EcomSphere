@@ -4,6 +4,8 @@ import { Root } from "./components/Root";
 import { useState } from "react";
 import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
+import { OTP } from "./components/OTP";
+import { Root2 } from "./components/Root2";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,8 +19,15 @@ function App() {
             element={<HomePage isAuthenticated={isAuthenticated} />}
           />
         </Route>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
+
+        <Route path="/signup" element={<Root2 />}>
+          <Route index={true} element={<SignUp />} />
+          <Route path={"otp"} element={<OTP />} />
+        </Route>
+        <Route path="/signin" element={<Root2 />}>
+          <Route index={true} element={<SignIn />} />
+          <Route path={"otp"} element={<OTP type={"signin"} />} />
+        </Route>
       </Routes>
     </>
   );

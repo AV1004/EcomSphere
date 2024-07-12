@@ -1,16 +1,19 @@
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-} from "@material-tailwind/react";
+import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const SignUp = () => {
   return (
-    <div className="flex justify-center h-screen items-center">
+    <motion.div
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      transition={{
+        duration: 1.3,
+      }}
+      className="flex justify-center h-screen items-center"
+    >
       <Card color="white" className="p-9" shadow={false}>
         <Typography variant="h4" color="blue-gray">
           Sign Up
@@ -79,6 +82,6 @@ export const SignUp = () => {
           </Typography>
         </form>
       </Card>
-    </div>
+    </motion.div>
   );
 };
