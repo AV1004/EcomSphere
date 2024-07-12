@@ -16,9 +16,9 @@ function App() {
             index={true}
             element={<HomePage isAuthenticated={isAuthenticated} />}
           />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn />} />
         </Route>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
     </>
   );
