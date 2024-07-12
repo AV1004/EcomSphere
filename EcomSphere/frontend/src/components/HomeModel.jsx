@@ -9,6 +9,13 @@ import { useAtom } from "jotai";
 import { currentPageAtom } from "./UI";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { IoIosCreate } from "react-icons/io";
+import { IoLogIn } from "react-icons/io5";
+import { IoReturnDownBackOutline } from "react-icons/io5";
+import { IoMdListBox } from "react-icons/io";
+import { FaBoxes } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";
+import { AiOutlineUserAdd } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const OverlayItem = ({
   className = "",
@@ -16,14 +23,29 @@ const OverlayItem = ({
   description,
   price,
   bgColor,
+  toLink,
   Icon,
   ...props
 }) => {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 
+  const navigate = useNavigate();
+
   const IconRender = () => {
     if (Icon === "signup") {
       return <IoIosCreate size={25} />;
+    } else if (Icon === "login") {
+      return <IoLogIn size={25} />;
+    } else if (Icon === "back") {
+      return <IoReturnDownBackOutline color="black" size={25} />;
+    } else if (Icon === "orders") {
+      return <IoMdListBox size={25} />;
+    } else if (Icon === "products") {
+      return <FaBoxes size={25} />;
+    } else if (Icon === "cart") {
+      return <FaShoppingCart size={25} />;
+    } else if (Icon === "yproducts") {
+      return <AiOutlineUserAdd size={25} />;
     }
   };
 
@@ -37,12 +59,18 @@ const OverlayItem = ({
       } transition-opacity duration-1000 ${className}`}
       {...props}
     >
-      <div className="bg-white bg-opacity-50 backdrop-blur-lg text-xs p-2 w-full">
+      <div className="bg-white  bg-opacity-50 backdrop-blur-lg text-xs p-2 w-full">
         <h2 className="font-bold">{title}</h2>
         <p>{description}</p>
       </div>
       <button
         className={`${bgColor} hover:bg-opacity-50 transition-colors duration-500 px-4 py-2 justify-center flex font-bold text-white w-full text-xs`}
+        onClick={() => {
+          setCurrentPage("home");
+          if (Icon !== "back") {
+            navigate(toLink);
+          }
+        }}
       >
         {/* Go -&gt; */}
         <IconRender />
@@ -51,7 +79,7 @@ const OverlayItem = ({
   );
 };
 
-export function HomeModel({ html, ...props }) {
+export function HomeModel({ isAuthenticated, html, ...props }) {
   const { nodes, materials } = useGLTF("models/EcomSphereHome.glb");
   return (
     <group {...props} dispose={null}>
@@ -81,22 +109,44 @@ export function HomeModel({ html, ...props }) {
           rotation={[-Math.PI / 2, 0, 1.562]}
           scale={0.154}
         >
-          {html && (
-            <OverlayItem
-              scale={5}
-              position-x={0.3}
-              position-y={-0.3}
-              position-z={0.9}
-              rotation-y={degToRad(-90)}
-              rotation-x={degToRad(90)}
-              title={`Sign Up`}
-              Icon={"signup"}
-              description={"Register your self now!"}
-              bgColor={"bg-teal-400"}
-              className="transition delay-300"
-            />
-          )}
-          <group name="root" position={[0, -0.015, 0]} visible={false}>
+          {isAuthenticated === true
+            ? html && (
+                <OverlayItem
+                  scale={5}
+                  position-x={0.3}
+                  position-y={-0.3}
+                  position-z={2}
+                  rotation-y={degToRad(-90)}
+                  rotation-x={degToRad(90)}
+                  toLink={"/cart"}
+                  title={`Cart`}
+                  Icon={"cart"}
+                  description={"Check your cart here."}
+                  bgColor={"bg-teal-400"}
+                  className="transition delay-300"
+                />
+              )
+            : html && (
+                <OverlayItem
+                  scale={5}
+                  position-x={0.3}
+                  position-y={-0.3}
+                  position-z={0.9}
+                  rotation-y={degToRad(-90)}
+                  rotation-x={degToRad(90)}
+                  toLink={"/signup"}
+                  title={`Sign Up`}
+                  Icon={"signup"}
+                  description={"Register your self now!"}
+                  bgColor={"bg-teal-400"}
+                  className="transition delay-300"
+                />
+              )}
+          <group
+            name="root"
+            position={[0, -0.015, 0]}
+            visible={isAuthenticated === true ? true : false}
+          >
             <group
               name="GLTF_SceneRootNode"
               position={[-0.063, 0.108, 0]}
@@ -188,6 +238,49 @@ export function HomeModel({ html, ...props }) {
           position={[-0.821, 0.609, -0.782]}
           scale={[0.368, 0.368, 0.611]}
         >
+          {html && (
+            <OverlayItem
+              scale={3}
+              position-x={-1}
+              position-y={isAuthenticated === true ? 2.4 : 1.6}
+              position-z={-1}
+              Icon={"back"}
+              bgColor={"bg-white"}
+              className="transition delay-300"
+            />
+          )}
+          {isAuthenticated === true
+            ? html && (
+                <OverlayItem
+                  scale={3}
+                  position-x={-1}
+                  position-y={1}
+                  position-z={-1}
+                  toLink={"/orders"}
+                  title={"Orders"}
+                  description={"Check your Orders"}
+                  Icon={"orders"}
+                  bgColor={"bg-green-200"}
+                  className="transition delay-300"
+                />
+              )
+            : ""}
+          {isAuthenticated === true
+            ? html && (
+                <OverlayItem
+                  scale={2.8}
+                  position-x={-0.8}
+                  position-y={-0.4}
+                  // position-z={-1}
+                  toLink={"/yourProducts"}
+                  title={"Your Products"}
+                  description={"Add your products."}
+                  Icon={"yproducts"}
+                  bgColor={"bg-indigo-500"}
+                  className="transition delay-300"
+                />
+              )
+            : ""}
           <mesh
             name="Cube003_Cube010-Mesh"
             geometry={nodes["Cube003_Cube010-Mesh"].geometry}
@@ -329,6 +422,39 @@ export function HomeModel({ html, ...props }) {
           position={[0.283, 0.6, 1.002]}
           scale={[5.57, 3.858, 2.892]}
         >
+          {isAuthenticated === true
+            ? html && (
+                <OverlayItem
+                  scale={[0.1, 0.15, 0.1]}
+                  position-x={0.04}
+                  position-y={0.05}
+                  position-z={-0.1}
+                  // rotation-y={degToRad(-90)}
+                  // rotation-x={degToRad(90)}
+                  toLink={"/products"}
+                  title={`Products`}
+                  Icon={"products"}
+                  description={"Visit our all products."}
+                  bgColor={"bg-black"}
+                  className="transition delay-300"
+                />
+              )
+            : html && (
+                <OverlayItem
+                  scale={[0.1, 0.15, 0.1]}
+                  position-x={0.04}
+                  position-y={0.05}
+                  position-z={-0.1}
+                  // rotation-y={degToRad(-90)}
+                  // rotation-x={degToRad(90)}
+                  toLink={"/signin"}
+                  title={`Sign In`}
+                  Icon={"login"}
+                  description={"Login now to explore!"}
+                  bgColor={"bg-black"}
+                  className="transition delay-300"
+                />
+              )}
           <mesh
             name="mesh336620870"
             geometry={nodes.mesh336620870.geometry}

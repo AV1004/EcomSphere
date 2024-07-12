@@ -8,10 +8,18 @@ import {
 } from "@material-tailwind/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
+import { useAtom } from "jotai";
+import { currentPageAtom } from "./UI";
 
 function NavItem({ label, to }) {
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   return (
-    <NavLink to={to}>
+    <NavLink
+      to={to}
+      onClick={() => {
+        setCurrentPage("home");
+      }}
+    >
       <Typography as="li" color="white" className="p-1 font-medium ">
         {label}
       </Typography>
@@ -48,6 +56,8 @@ export const NavbarCom = ({ isAuthenticated }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
 
+  const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
+
   React.useEffect(() => {
     window.addEventListener(
       "resize",
@@ -66,7 +76,10 @@ export const NavbarCom = ({ isAuthenticated }) => {
               <Typography
                 as="button"
                 color="white"
-                className="mr-4 cursor-pointer text-lg font-bold pointer-events-auto "
+                className="mr-4 cursor-pointer text-lg font-bold pointer-events-auto"
+                onClick={() => {
+                  setCurrentPage("home");
+                }}
               >
                 EComSphere
               </Typography>
@@ -81,6 +94,9 @@ export const NavbarCom = ({ isAuthenticated }) => {
                   <Button
                     color="teal"
                     className="hidden lg:inline-block pointer-events-auto"
+                    onClick={() => {
+                      setCurrentPage("home");
+                    }}
                   >
                     Profile
                   </Button>
@@ -92,6 +108,9 @@ export const NavbarCom = ({ isAuthenticated }) => {
                   <Button
                     color="teal"
                     className="hidden lg:inline-block pointer-events-auto"
+                    onClick={() => {
+                      setCurrentPage("home");
+                    }}
                   >
                     Sign in
                   </Button>
@@ -100,6 +119,9 @@ export const NavbarCom = ({ isAuthenticated }) => {
                   <Button
                     color="white"
                     className="hidden lg:inline-block pointer-events-auto "
+                    onClick={() => {
+                      setCurrentPage("home");
+                    }}
                   >
                     Sign up
                   </Button>
@@ -126,7 +148,13 @@ export const NavbarCom = ({ isAuthenticated }) => {
                 <div>
                   <NavList />
                   <NavLink to={"/profile"}>
-                    <Button color="teal" className="mb-2 pointer-events-auto ">
+                    <Button
+                      color="teal"
+                      className="mb-2 pointer-events-auto "
+                      onClick={() => {
+                        setCurrentPage("home");
+                      }}
+                    >
                       Profile
                     </Button>
                   </NavLink>
@@ -134,12 +162,24 @@ export const NavbarCom = ({ isAuthenticated }) => {
               ) : (
                 <div className="flex gap-5">
                   <NavLink to={"/signin"}>
-                    <Button color="teal" className="mb-2 pointer-events-auto ">
+                    <Button
+                      color="teal"
+                      className="mb-2 pointer-events-auto "
+                      onClick={() => {
+                        setCurrentPage("home");
+                      }}
+                    >
                       Sign in
                     </Button>
                   </NavLink>
                   <NavLink to={"/signup"}>
-                    <Button color="white" className="mb-2 pointer-events-auto ">
+                    <Button
+                      color="white"
+                      className="mb-2 pointer-events-auto "
+                      onClick={() => {
+                        setCurrentPage("home");
+                      }}
+                    >
                       Sign up
                     </Button>
                   </NavLink>

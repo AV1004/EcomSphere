@@ -12,7 +12,10 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Root isAuthenticated={isAuthenticated} />}>
-          <Route index={true} element={<HomePage />} />
+          <Route
+            index={true}
+            element={<HomePage isAuthenticated={isAuthenticated} />}
+          />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
         </Route>

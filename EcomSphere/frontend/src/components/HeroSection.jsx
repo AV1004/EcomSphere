@@ -19,7 +19,7 @@ import { HomeModel } from "./HomeModel";
 const bloomColor = new Color("#fff");
 bloomColor.multiplyScalar(1.5);
 
-export const HeroSection = () => {
+export const HeroSection = ({ isAuthenticated }) => {
   const controls = useRef();
   const meshFitCameraHome = useRef();
   const meshFitCameraStore = useRef();
@@ -76,7 +76,7 @@ export const HeroSection = () => {
           rotateY: currentPage === "home" ? degToRad(30) : 0,
         }}
         transition={{
-          duration: 2,
+          duration: 1,
         }}
         position-x={-1.3}
         position-y={-0.5}
@@ -116,14 +116,14 @@ export const HeroSection = () => {
           rotateY: currentPage === "home" ? degToRad(-25) : 0,
         }}
         transition={{
-          duration: 2,
+          duration: 1,
         }}
         // rotation-y={}
         position-x={4.5}
         position-z={-1}
         position-y={-1.1}
       >
-        <HomeModel scale={1.3} html />
+        <HomeModel scale={1.3} html isAuthenticated={isAuthenticated} />
         <mesh
           ref={meshFitCameraStore}
           position-x={-1}
