@@ -8,7 +8,7 @@ import { OTP } from "./components/OTP";
 import { Root2 } from "./components/Root2";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <>
