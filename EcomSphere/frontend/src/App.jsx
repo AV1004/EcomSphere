@@ -6,6 +6,7 @@ import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
 import { OTP } from "./components/OTP";
 import { Root2 } from "./components/Root2";
+import { ProfilePage } from "./components/ProfilePage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
@@ -28,6 +29,8 @@ function App() {
           <Route index={true} element={<SignIn />} />
           <Route path={"otp"} element={<OTP type={"signin"} />} />
         </Route>
+
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </>
   );
