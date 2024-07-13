@@ -19,6 +19,7 @@ function App() {
             index={true}
             element={<HomePage isAuthenticated={isAuthenticated} />}
           />
+          <Route path="/products" />
         </Route>
 
         <Route path="/signup" element={<Root2 />}>
