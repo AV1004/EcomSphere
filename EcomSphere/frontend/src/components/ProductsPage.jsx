@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Scroll } from "@react-three/drei";
 import {
   Menu,
   MenuHandler,
@@ -8,19 +7,18 @@ import {
   MenuItem,
   Button,
 } from "@material-tailwind/react";
+import { Products3DScene } from "./Products3DScene";
+import { Overlay } from "./Overlay";
+import { Leva } from "leva";
 
 export default function ProductsPage() {
-  const [openMenu, setOpenMenu] = useState(false);
-
   return (
     <>
-      <Canvas shadows camera={{ position: [0, 2.5, 8.5], fov: 42 }}>
-        <OrbitControls />
-        <color attach={"background"} args={["#171720"]} />
-        <mesh>
-          <boxGeometry args={[2, 2, 2]} />
-          <meshBasicMaterial color={"red"} transparent opacity={0.5} />
-        </mesh>
+      <Leva hidden />
+      <Overlay />
+      <Canvas shadows camera={{ position: [0, 0, 5], fov: 30 }}>
+        <color attach="background" args={["#171720"]} />
+        <Products3DScene />
       </Canvas>
       <div className="fixed inset-0 pointer-events-none">
         <section className={`flex w-[10%]  m-20  flex-col    duration-500`}>
@@ -31,7 +29,7 @@ export default function ProductsPage() {
             }}
           >
             <MenuHandler>
-              <Button> All Products</Button>
+              <Button className="pointer-events-auto"> All Products</Button>
             </MenuHandler>
             <MenuList>
               <MenuItem>Menu Item 1</MenuItem>
