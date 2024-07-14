@@ -22,6 +22,7 @@ import { FaRegAddressBook } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
 import { RiPagesFill } from "react-icons/ri";
 import { TbPasswordFingerprint } from "react-icons/tb";
+import { motion } from "framer-motion";
 
 // Dummy Orders Table Data
 const TABLE_HEAD = ["Id", "Status", "Order Date", "Total", ""];
@@ -200,44 +201,80 @@ export const ProfilePage = () => {
         <div className="flex justify-center  items-center w-full">
           {/* Account Settings */}
           {showContent === "accountSettings" && (
-            <Card className="w-full  lg:w-[70%]  m-10" color="blue-gray">
-              <CardHeader
-                variant="gradient"
-                color="white"
-                className="mb-4 grid h-28 place-items-center"
-              >
-                <Typography variant={isMoblie ? "h4" : "h3"} color="black">
-                  Account Settings
-                </Typography>
-              </CardHeader>
-              <CardBody className="flex flex-col gap-4 ">
-                <Typography variant="h6" color="white">
-                  Personal Information
-                </Typography>
-                <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
-                  <Input required label="Your Name" color="white" />
-                  <Input required label="Mobile No" color="white" />
-                </div>
-                <div className="lg:w-[49.3%]">
-                  <Input label="Password" required color="white" />
-                </div>
-              </CardBody>
-              <CardFooter className="pt-0 w-full flex justify-center">
-                <Button variant="gradient" color="white">
-                  Save Changes
-                </Button>
-              </CardFooter>
-            </Card>
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                duration: 1.3,
+              }}
+              className="justify-center  items-center w-full flex"
+            >
+              <Card className="w-full  lg:w-[70%]  m-10" color="blue-gray">
+                <CardHeader
+                  variant="gradient"
+                  color="white"
+                  className="mb-4 grid h-28 place-items-center"
+                >
+                  <Typography variant={isMoblie ? "h4" : "h3"} color="black">
+                    <motion.p
+                      initial={{ opacity: 0, y: -50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 1.8,
+                      }}
+                    >
+                      Account Settings
+                    </motion.p>
+                  </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col gap-4 ">
+                  <Typography variant="h6" color="white">
+                    Personal Information
+                  </Typography>
+                  <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
+                    <Input required label="Your Name" color="white" />
+                    <Input required label="Mobile No" color="white" />
+                  </div>
+                  <div className="lg:w-[49.3%]">
+                    <Input label="Password" required color="white" />
+                  </div>
+                </CardBody>
+                <CardFooter className="pt-0 w-full flex justify-center">
+                  <Button variant="gradient" color="white">
+                    Save Changes
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           )}
           {/* Recent Orders */}
           {showContent === "myOrders" && (
-            <div className="lg:flex lg:flex-col w-full lg:items-center">
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                duration: 1.3,
+              }}
+              className="lg:flex lg:flex-col w-full lg:items-center"
+            >
               <Typography
                 color="white"
                 className="underline underline-offset-8 flex items-center justify-center"
                 variant="h3"
               >
-                Recent Orders
+                <motion.p
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{
+                    duration: 1.8,
+                  }}
+                >
+                  Recent Orders
+                </motion.p>
               </Typography>
               <Card
                 className="m-10  lg:h-[60%] lg:w-[60%]  overflow-scroll lg:overflow-hidden"
@@ -322,130 +359,187 @@ export const ProfilePage = () => {
                   <Button color="white">Show More</Button>
                 </Link>
               </div>
-            </div>
+            </motion.div>
           )}
           {/* Addresses */}
           {showContent === "address" && (
-            <Card className="w-full  lg:w-[70%]  m-10" color="white">
-              <CardHeader
-                variant="gradient"
-                color="blue-gray"
-                className="mb-4 grid h-28 place-items-center"
-              >
-                <Typography variant={isMoblie ? "h4" : "h3"} color="white">
-                  Your Addresses
-                </Typography>
-              </CardHeader>
-              <CardBody className="flex flex-col gap-4 ">
-                <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
-                  <Textarea label="Address 1" required />
-                  <Textarea label="Address 2" />
-                </div>
-              </CardBody>
-              <CardFooter className="pt-0 w-full flex justify-center">
-                <Button variant="gradient" color="blue-gray">
-                  Save Changes
-                </Button>
-              </CardFooter>
-            </Card>
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                duration: 1.3,
+              }}
+              className="justify-center  items-center w-full flex"
+            >
+              <Card className="w-full  lg:w-[70%]  m-10" color="white">
+                <CardHeader
+                  variant="gradient"
+                  color="blue-gray"
+                  className="mb-4 grid h-28 place-items-center"
+                >
+                  <Typography variant={isMoblie ? "h4" : "h3"} color="white">
+                    <motion.p
+                      initial={{ opacity: 0, y: -50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 1.8,
+                      }}
+                    >
+                      Your Addresses
+                    </motion.p>
+                  </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col gap-4 ">
+                  <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
+                    <Textarea label="Address 1" required />
+                    <Textarea label="Address 2" />
+                  </div>
+                </CardBody>
+                <CardFooter className="pt-0 w-full flex justify-center">
+                  <Button variant="gradient" color="blue-gray">
+                    Save Changes
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           )}
           {/* Legal Notice */}
           {showContent === "legalNotice" && (
-            <Card
-              className=" m-10 w-full max-w-[48rem] h-96 flex-row"
-              color="blue-gray"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 1.3,
+              }}
+              className="justify-center  items-center w-full flex"
             >
-              <CardHeader
-                shadow={false}
-                floated={false}
-                className="m-0 w-2/5 shrink-0 flex justify-center items-center rounded-r-none"
+              <Card
+                className=" m-10 w-full max-w-[48rem] h-96 flex-row"
+                color="blue-gray"
               >
-                <img
-                  src="http://localhost:5173/images/notice.jpg"
-                  alt="card-image"
-                  className="w-full  object-cover"
-                />
-              </CardHeader>
-              <CardBody className="overflow-scroll">
-                <Typography
-                  variant="h5"
-                  color="white"
-                  className="mb-4 uppercase"
+                <CardHeader
+                  shadow={false}
+                  floated={false}
+                  className="m-0 w-2/5 shrink-0 flex justify-center items-center rounded-r-none"
                 >
-                  EcomSphere - 3D E-Commerce Platform
-                  <br />
-                  Effective Date: July 14, 2024
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Introduction
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  Welcome to EcomSphere. By using our website, you agree to the
-                  following terms and conditions.
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Intellectual Property
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  All content on EcomSphere is owned by its respective owners.
-                  Unauthorized use is prohibited.
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  User Conduct
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  Users must act responsibly. Any abusive or illegal activity
-                  will result in termination of access.
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Disclaimer
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  EcomSphere is provided "as is" without warranties. We are not
-                  liable for any damages from using our site.
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Governing Law
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  This notice is governed by local laws. Disputes are subject to
-                  the jurisdiction of local courts.
-                </Typography>
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Contact
-                </Typography>
-                <Typography color="white" className="mb-8 font-normal">
-                  For questions, email us at{" "}
-                  <a href="mailto:support@ecomsphere.com">
-                    support@ecomsphere.com.
-                  </a>
-                </Typography>
-              </CardBody>
-            </Card>
+                  <img
+                    src="http://localhost:5173/images/notice.jpg"
+                    alt="card-image"
+                    className="w-full  object-cover"
+                  />
+                </CardHeader>
+                <CardBody className="overflow-scroll">
+                  <Typography
+                    variant="h5"
+                    color="white"
+                    className="mb-4 uppercase"
+                  >
+                    <motion.p
+                      initial={{ opacity: 0, y: -50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 1.8,
+                      }}
+                    >
+                      EcomSphere - 3D E-Commerce Platform
+                      <br />
+                      Effective Date: July 14, 2024
+                    </motion.p>
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    Introduction
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    Welcome to EcomSphere. By using our website, you agree to
+                    the following terms and conditions.
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    Intellectual Property
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    All content on EcomSphere is owned by its respective owners.
+                    Unauthorized use is prohibited.
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    User Conduct
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    Users must act responsibly. Any abusive or illegal activity
+                    will result in termination of access.
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    Disclaimer
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    EcomSphere is provided "as is" without warranties. We are
+                    not liable for any damages from using our site.
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    Governing Law
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    This notice is governed by local laws. Disputes are subject
+                    to the jurisdiction of local courts.
+                  </Typography>
+                  <Typography variant="h6" color="blue-gray" className="mb-2">
+                    Contact
+                  </Typography>
+                  <Typography color="white" className="mb-8 font-normal">
+                    For questions, email us at{" "}
+                    <a href="mailto:support@ecomsphere.com">
+                      support@ecomsphere.com.
+                    </a>
+                  </Typography>
+                </CardBody>
+              </Card>
+            </motion.div>
           )}
           {/* Change Password */}
           {showContent === "changePass" && (
-            <Card className="w-full  lg:w-[70%]  m-10" color="white">
-              <CardHeader
-                variant="gradient"
-                color="blue-gray"
-                className="mb-4 grid h-28 place-items-center"
-              >
-                <Typography variant={isMoblie ? "h4" : "h3"} color="white">
-                  Change Password
-                </Typography>
-              </CardHeader>
-              <CardBody className="flex flex-col gap-4">
-                <Input required label="Old Password" size="lg" />
-                <Input required label="New Password" size="lg" />
-                <Input required label="Confirm New Password" size="lg" />
-              </CardBody>
-              <CardFooter className="pt-0 flex justify-center">
-                <Button variant="gradient" color="blue-gray">
-                  Save Changes
-                </Button>
-              </CardFooter>
-            </Card>
+            <motion.div
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{
+                duration: 1.3,
+              }}
+              className="justify-center  items-center w-full flex"
+            >
+              <Card className="w-full  lg:w-[70%]  m-10" color="white">
+                <CardHeader
+                  variant="gradient"
+                  color="blue-gray"
+                  className="mb-4 grid h-28 place-items-center"
+                >
+                  <Typography variant={isMoblie ? "h4" : "h3"} color="white">
+                    <motion.p
+                      initial={{ opacity: 0, y: -50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 1.8,
+                      }}
+                    >
+                      Change Password
+                    </motion.p>
+                  </Typography>
+                </CardHeader>
+                <CardBody className="flex flex-col gap-4">
+                  <Input required label="Old Password" size="lg" />
+                  <Input required label="New Password" size="lg" />
+                  <Input required label="Confirm New Password" size="lg" />
+                </CardBody>
+                <CardFooter className="pt-0 flex justify-center">
+                  <Button variant="gradient" color="blue-gray">
+                    Save Changes
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           )}
         </div>
       </div>

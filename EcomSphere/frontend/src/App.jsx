@@ -7,19 +7,23 @@ import { SignIn } from "./components/SignIn";
 import { OTP } from "./components/OTP";
 import { Root2 } from "./components/Root2";
 import { ProfilePage } from "./components/ProfilePage";
+import { LoadingScreen } from "./components/LoadingScreen";
+import ProductsPage from "./components/ProductsPage";
 
 function App() {
+  const [started, setStarted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <>
+      <LoadingScreen started={started} setStarted={setStarted} />
       <Routes>
         <Route path="/" element={<Root isAuthenticated={isAuthenticated} />}>
           <Route
             index={true}
             element={<HomePage isAuthenticated={isAuthenticated} />}
           />
-          <Route path="/products" />
+          <Route path="/products" element={<ProductsPage />} />
         </Route>
 
         <Route path="/signup" element={<Root2 />}>
