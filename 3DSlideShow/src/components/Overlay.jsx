@@ -1,52 +1,17 @@
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { scenes } from "./Experience";
-import { Card, CardBody, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Tooltip,
+  Button,
+} from "@material-tailwind/react";
 
 export const slideAtom = atom(0);
-
-export function ProductListCard({ img, name, price }) {
-  return (
-    <Card shadow={false} className="border border-gray-300 w-[60%] h-[60%]">
-      <CardBody className="pb-0">
-        <img src={img} alt={img} className="min-w-[280px] w-full" />
-        <div className="flex justify-between">
-          <div>
-            <Typography className="mb-2" color="blue-gray" variant="h5">
-              {name}
-            </Typography>
-            <div className="mb-5 flex items-center gap-2">
-              <div className="h-5 w-5 rounded border border-gray-900 bg-brown-300 "></div>
-              <div className="h-5 w-5 rounded border border-blue-gray-100 "></div>
-              <div className="h-5 w-5 rounded border border-blue-gray-100 bg-gray-900 "></div>
-            </div>
-          </div>
-          <Typography variant="h5" className="text-gray-600">
-            {price}
-          </Typography>
-        </div>
-      </CardBody>
-    </Card>
-  );
-}
-
-const CONTENTS = [
-  {
-    img: "https://www.material-tailwind.com/image/product-4.png",
-    name: "Linen Suit",
-    price: "$2,500",
-  },
-  {
-    img: "https://www.material-tailwind.com/image/product-3.png",
-    name: "Tweed Suit",
-    price: "$2,300",
-  },
-  {
-    img: "https://www.material-tailwind.com/image/product-5.png",
-    name: "Premium Suit",
-    price: "$1,240",
-  },
-];
 
 export const Overlay = () => {
   const [slide, setSlide] = useAtom(slideAtom);
@@ -119,28 +84,35 @@ export const Overlay = () => {
             />
           </svg>
         </div>
-        <section className="py-10 px-8">
-          <div className="mx-auto text-center mb-16">
-            <Typography className="font-medium text-lg">
-              Tailored Product Search
-            </Typography>
-            <Typography variant="h1" className="my-4 text-4xl">
-              Find What You Need
-            </Typography>
-          </div>
-          <div className="mx-auto container">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-3  md:grid-cols-2">
-              {CONTENTS.map(({ img, name, price }, index) => (
-                <ProductListCard
-                  key={index}
-                  img={img}
-                  name={name}
-                  price={price}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
+        <div className="flex justify-center items-center gap-36 flex-wrap mt-10 border bg-white rounded-xl shadow-2xl h-[85%] m-16">
+          <Card className="bg-black text-white">
+            <CardHeader floated={false} className="h-[25rem]">
+              <img
+                src="https://docs.material-tailwind.com/img/team-3.jpg"
+                alt="profile-picture"
+              />
+            </CardHeader>
+            <CardBody className="text-center h-36 shadow-lg">
+              <Typography variant="h4" color="blue-gray" className="mb-2">
+                Natalie Paisley
+              </Typography>
+              <Typography
+                color="blue-gray"
+                className="font-medium"
+                textGradient
+              >
+                CEO / Co-Founder
+              </Typography>
+
+              <Button
+                className="pointer-events-auto m-3 text-black p-4"
+                color="white"
+              >
+                Add to Cart
+              </Button>
+            </CardBody>
+          </Card>
+        </div>
         {/* <div className="bg-gradient-to-t from-white/90 pt-20 pb-10 p-4 flex items-center flex-col text-center">
           <h1 className="text-5xl font-extrabold">
             {scenes[displaySlide].name}
