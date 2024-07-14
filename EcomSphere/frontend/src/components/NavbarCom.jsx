@@ -21,7 +21,7 @@ function NavItem({ label, to }) {
       }}
     >
       <Typography as="li" color="white" className="p-1 font-medium ">
-        {label}
+        <button>{label}</button>
       </Typography>
     </NavLink>
   );

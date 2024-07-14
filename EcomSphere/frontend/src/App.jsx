@@ -9,6 +9,7 @@ import { Root2 } from "./components/Root2";
 import { ProfilePage } from "./components/ProfilePage";
 import { LoadingScreen } from "./components/LoadingScreen";
 import ProductsPage from "./components/ProductsPage";
+import Cursor from "./components/Cursor";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -37,6 +38,7 @@ function App() {
 
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
+      <Cursor />
     </>
   );
 }
