@@ -1,12 +1,7 @@
 import React from "react";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import {
-  ArrowDownTrayIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import {
   Card,
-  CardHeader,
   Typography,
   Button,
   CardBody,
@@ -15,10 +10,17 @@ import {
   Avatar,
   IconButton,
   Tooltip,
-  Input,
 } from "@material-tailwind/react";
+import { IoBagCheckOutline } from "react-icons/io5";
 
-const TABLE_HEAD = ["Transaction", "Amount", "Date", "Status", "Account", ""];
+const TABLE_HEAD = [
+  "Transaction",
+  "Amount",
+  "Date",
+  "Status",
+  "Account",
+  "Quantity",
+];
 
 const TABLE_ROWS = [
   {
@@ -85,20 +87,20 @@ export default function Cart() {
           </div>
         </div> */}
         <div className="pointer-events-auto  flex justify-center items-center lg:justify-start lg:items-start">
-          <Card className="h-[69%] w-full overflow-hidden bg-[#171720] mr-20 ml-20">
-            <CardBody className="px-0 overflow-auto scrollbar-thin scrollbar-webkit">
+          <Card className="h-full w-full overflow-hidden bg-[#171720] mr-20 ml-20">
+            <CardBody className="px-0 h-[27rem] overflow-auto scrollbar-thin scrollbar-webkit">
               <table className="w-full min-w-max table-auto text-left">
                 <thead>
                   <tr>
                     {TABLE_HEAD.map((head) => (
                       <th
                         key={head}
-                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                        className="border-y border-blue-gray-100 bg-blue-gray-700 p-4"
                       >
                         <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal leading-none opacity-70"
+                          variant="h5"
+                          color="white"
+                          className="leading-none opacity-70 font-semibold"
                         >
                           {head}
                         </Typography>
@@ -106,7 +108,7 @@ export default function Cart() {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="border-0">
                   {TABLE_ROWS.map(
                     (
                       {
@@ -121,49 +123,44 @@ export default function Cart() {
                       },
                       index
                     ) => {
-                      const isLast = index === TABLE_ROWS.length - 1;
-                      const classes = isLast
-                        ? "p-4"
-                        : "p-4 border-b border-blue-gray-50";
-
                       return (
                         <tr key={name}>
-                          <td className={classes}>
+                          <td className="p-4 ">
                             <div className="flex items-center gap-3">
                               <Avatar
                                 src={img}
                                 alt={name}
                                 size="md"
-                                className="border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
+                                className="border border-blue-gray-50 bg-white object-contain p-1"
                               />
                               <Typography
                                 variant="small"
-                                color="blue-gray"
+                                color="white"
                                 className="font-bold"
                               >
                                 {name}
                               </Typography>
                             </div>
                           </td>
-                          <td className={classes}>
+                          <td className="p-4 ">
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color="white"
                               className="font-normal"
                             >
                               {amount}
                             </Typography>
                           </td>
-                          <td className={classes}>
+                          <td className="p-4">
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color="white"
                               className="font-normal"
                             >
                               {date}
                             </Typography>
                           </td>
-                          <td className={classes}>
+                          <td className="p-4">
                             <div className="w-max">
                               <Chip
                                 size="sm"
@@ -179,7 +176,7 @@ export default function Cart() {
                               />
                             </div>
                           </td>
-                          <td className={classes}>
+                          <td className="p-4">
                             <div className="flex items-center gap-3">
                               <div className="h-9 w-12 rounded-md border border-blue-gray-50 p-1">
                                 <Avatar
@@ -197,7 +194,7 @@ export default function Cart() {
                               <div className="flex flex-col">
                                 <Typography
                                   variant="small"
-                                  color="blue-gray"
+                                  color="white"
                                   className="font-normal capitalize"
                                 >
                                   {account.split("-").join(" ")} {accountNumber}
@@ -212,10 +209,10 @@ export default function Cart() {
                               </div>
                             </div>
                           </td>
-                          <td className={classes}>
+                          <td className="p-4">
                             <Tooltip content="Edit User">
                               <IconButton variant="text">
-                                <PencilIcon className="h-4 w-4" />
+                                <PencilIcon className="h-4 w-4 text-white" />
                               </IconButton>
                             </Tooltip>
                           </td>
@@ -226,36 +223,51 @@ export default function Cart() {
                 </tbody>
               </table>
             </CardBody>
-            <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-              <Button variant="outlined" size="sm">
-                Previous
-              </Button>
-              <div className="flex items-center gap-2">
-                <IconButton variant="outlined" size="sm">
-                  1
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  2
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  3
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  ...
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  8
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  9
-                </IconButton>
-                <IconButton variant="text" size="sm">
-                  10
-                </IconButton>
+            <CardFooter
+              children
+              className="flex items-end justify-end text-white p-4"
+            >
+              <div className="border-t w-[30%]  flex flex-col 4 border-white">
+                <Card className="w-full bg-[#171720]">
+                  <CardBody className="flex flex-col gap-4">
+                    <div className="divide-y divide-gray-200">
+                      <div className="flex items-center justify-between last:pb-0">
+                        <div className="flex items-center gap-x-3">
+                          <div>
+                            <Typography color="white" variant="h4">
+                              Items
+                            </Typography>
+                          </div>
+                        </div>
+                        <Typography color="white" variant="h4">
+                          4
+                        </Typography>
+                      </div>
+                    </div>
+                    <div className="divide-y divide-gray-200">
+                      <div className="flex items-center justify-between last:pb-0">
+                        <div className="flex items-center gap-x-3">
+                          <div>
+                            <Typography color="white" variant="h4">
+                              Total
+                            </Typography>
+                          </div>
+                        </div>
+                        <Typography color="white" variant="h4">
+                          $1234
+                        </Typography>
+                      </div>
+                    </div>
+                  </CardBody>
+                  <Button
+                    color="teal"
+                    className="flex justify-center items-center text-md font-light gap-2"
+                  >
+                    Proceed to Checkout
+                    <IoBagCheckOutline size={24} className="mb-2" />
+                  </Button>
+                </Card>
               </div>
-              <Button variant="outlined" size="sm">
-                Next
-              </Button>
             </CardFooter>
           </Card>
         </div>
