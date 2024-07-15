@@ -198,6 +198,7 @@ export const ProfilePage = () => {
             </ListItem>
           </List>
         </Drawer>
+
         <div className="flex justify-center  items-center w-full">
           {/* Account Settings */}
           {showContent === "accountSettings" && (
