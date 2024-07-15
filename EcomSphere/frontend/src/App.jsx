@@ -10,6 +10,7 @@ import { ProfilePage } from "./components/ProfilePage";
 import { LoadingScreen } from "./components/LoadingScreen";
 import ProductsPage from "./components/ProductsPage";
 import Cursor from "./components/Cursor";
+import Cart from "./components/Cart";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -25,6 +26,7 @@ function App() {
             element={<HomePage isAuthenticated={isAuthenticated} />}
           />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
 
         <Route path="/signup" element={<Root2 />}>
