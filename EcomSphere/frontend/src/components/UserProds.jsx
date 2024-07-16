@@ -122,11 +122,9 @@ export default function UserProds() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                  key={index}
                 >
-                  <Card
-                    className="w-64 lg:w-64 h-[91%] mb-10"
-                    key={product.name}
-                  >
+                  <Card className="w-64 lg:w-64 h-[91%] mb-10">
                     <CardHeader floated={false} className="">
                       <img
                         src="https://docs.material-tailwind.com/img/team-3.jpg"

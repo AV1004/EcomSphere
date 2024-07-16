@@ -171,8 +171,9 @@ export default function ProductsPage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                    key={index}
                   >
-                    <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                    <Card className="w-80 lg:w-96 mb-10">
                       <CardHeader floated={false} className="lg:h-80 ">
                         <img
                           src="https://docs.material-tailwind.com/img/team-3.jpg"
@@ -236,8 +237,9 @@ export default function ProductsPage() {
                         transition={{
                           duration: 0.5,
                         }}
+                        key={index}
                       >
-                        <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                        <Card className="w-80 lg:w-96 mb-10">
                           <CardHeader floated={false} className="lg:h-80 ">
                             <img
                               src="https://docs.material-tailwind.com/img/team-3.jpg"

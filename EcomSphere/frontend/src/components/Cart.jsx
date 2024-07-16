@@ -9,6 +9,7 @@ import {
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import { FaMinus } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 const TABLE_HEAD = ["Products", "Quantity", "Subtotal"];
 
@@ -56,7 +57,12 @@ export default function Cart() {
           <Card className="h-full w-full overflow-hidden bg-[#171720] lg:mx-20 ">
             <CardBody className="px-0 lg:h-[30.9rem] h-[42rem] overflow-auto scrollbar-thin scrollbar-webkit">
               <table className="w-full min-w-max lg:table-auto table-fixed text-left">
-                <thead>
+                <motion.thead
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.3 }}
+                >
                   <tr>
                     {TABLE_HEAD.map((head) => (
                       <th
@@ -73,7 +79,7 @@ export default function Cart() {
                       </th>
                     ))}
                   </tr>
-                </thead>
+                </motion.thead>
                 <tbody className="border-0">
                   {TABLE_ROWS.map(
                     (
@@ -81,7 +87,13 @@ export default function Cart() {
                       index
                     ) => {
                       return (
-                        <tr key={index}>
+                        <motion.tr
+                          key={index}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                        >
                           <td className="p-4">
                             <div className="flex lg:flex-row flex-col items-center gap-3">
                               <img
@@ -93,11 +105,11 @@ export default function Cart() {
                                 <Typography
                                   variant="h6"
                                   color="white"
-                                  className="font-bold flex gap-2"
+                                  className="font-bold flex lg:flex-row flex-col gap-2"
                                 >
                                   {name}
                                   <Typography
-                                    variant="h6"
+                                    variant="small"
                                     color="white"
                                     className="font-bold"
                                   >
@@ -145,7 +157,7 @@ export default function Cart() {
                               ${total}
                             </Typography>
                           </td>
-                        </tr>
+                        </motion.tr>
                       );
                     }
                   )}
@@ -156,7 +168,13 @@ export default function Cart() {
               children
               className="flex items-end justify-end text-white p-0"
             >
-              <div className="border-t lg:w-[30%] w-full  flex flex-col  border-white">
+              <motion.div
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: 1 }}
+                className="border-t lg:w-[30%] w-full  flex flex-col  border-white"
+              >
                 <Card className="w-full bg-[#171720]">
                   <CardBody className="flex flex-col gap-4">
                     <div className="divide-y divide-gray-200">
@@ -198,7 +216,7 @@ export default function Cart() {
                     </Button>
                   </CardBody>
                 </Card>
-              </div>
+              </motion.div>
             </CardFooter>
           </Card>
         </div>

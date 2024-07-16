@@ -16,6 +16,8 @@ import { motion } from "framer-motion-3d";
 import { currentPageAtom } from "./UI";
 import { HomeModel } from "./HomeModel";
 
+const isMoblie = window.innerWidth < 768;
+
 const bloomColor = new Color("#fff");
 bloomColor.multiplyScalar(1.5);
 
@@ -126,9 +128,9 @@ export const HeroSection = ({ isAuthenticated }) => {
         <HomeModel scale={1.3} html isAuthenticated={isAuthenticated} />
         <mesh
           ref={meshFitCameraStore}
-          position-x={-1}
-          position-y={1.3}
-          position-z={-2.3}
+          position-x={isMoblie ? -2.5 : -0.5}
+          position-y={1.6}
+          position-z={isMoblie ? -5.1 : -1.2}
           visible={false}
         >
           <boxGeometry args={[5, 1, 2]} />
