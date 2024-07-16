@@ -12,6 +12,7 @@ import ProductsPage from "./components/ProductsPage";
 import Cursor from "./components/Cursor";
 import Cart from "./components/Cart";
 import UserProds from "./components/UserProds";
+import { MyOrders } from "./components/MyOrders";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -29,6 +30,7 @@ function App() {
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/yourProducts" element={<UserProds />} />
+          <Route path="/orders" element={<MyOrders />} />
         </Route>
 
         <Route path="/signup" element={<Root2 />}>
