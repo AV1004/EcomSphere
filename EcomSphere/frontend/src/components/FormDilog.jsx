@@ -12,6 +12,8 @@ import {
   Option,
 } from "@material-tailwind/react";
 import { FaLink } from "react-icons/fa";
+import { TiCancel } from "react-icons/ti";
+import { IoIosSave } from "react-icons/io";
 
 export default function FormDilog({
   openDilog,
@@ -37,11 +39,12 @@ export default function FormDilog({
           setFileInput(null);
           handleOpen();
         }}
+        className="bg-blue-gray-900"
       >
         <div className="flex items-center justify-between">
           <DialogHeader className="flex flex-col items-start">
             {" "}
-            <Typography className="mb-1" variant="h4">
+            <Typography className="mb-1" variant="h4" color="cyan">
               {isEdit === true ? "Edit Product" : "Add Product"}
             </Typography>
           </DialogHeader>
@@ -49,7 +52,7 @@ export default function FormDilog({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="mr-3 h-5 w-5 cursor-pointer"
+            className="mr-3 h-5 w-5 text-cyan-600 cursor-pointer"
             onClick={handleOpen}
           >
             <path
@@ -66,19 +69,27 @@ export default function FormDilog({
           <div className="grid gap-3">
             <Input
               label="Name"
+              color="cyan"
+              className="text-white"
               defaultValue={isEdit === true ? product.name : ""}
             />
             <Input
               label="Price"
+              color="cyan"
               type="number"
+              className="text-white"
               defaultValue={isEdit === true ? product.price : ""}
             />
             <Textarea
               label="Description"
+              color="cyan"
+              className="text-white"
               defaultValue={isEdit === true ? product.description : ""}
             />
             <Select
               label="Category"
+              color="cyan"
+              className="text-white"
               animate={{
                 mount: { y: 0 },
                 unmount: { y: 25 },
@@ -95,7 +106,7 @@ export default function FormDilog({
               htmlFor="file"
               className={`flex cursor-pointer ${
                 fileInput !== null ? "lg:text-md text-sm" : "lg:text-lg text-sm"
-              } justify-start gap-2 items-center font-medium text-blue-gray-600`}
+              } justify-start gap-2 items-center font-medium text-white`}
             >
               {fileInput === null
                 ? isEdit === true
@@ -116,16 +127,22 @@ export default function FormDilog({
         <DialogFooter className="space-x-2">
           <Button
             variant="text"
-            color="gray"
+            color="white"
+            className="flex justify-center items-center gap-1"
             onClick={() => {
               setFileInput(null);
               handleOpen();
             }}
           >
-            cancel
+            Cancel <TiCancel size={17} />
           </Button>
-          <Button variant="gradient" color="gray" onClick={handleOpen}>
-            send message
+          <Button
+            variant="gradient"
+            className="flex justify-center items-center gap-1"
+            color="cyan"
+            onClick={handleOpen}
+          >
+            Save <IoIosSave size={17} />
           </Button>
         </DialogFooter>
       </Dialog>
