@@ -92,11 +92,11 @@ export default function ProductsPage() {
       <div className="fixed inset-0 pointer-events-none">
         <section className={`flex w-full h-full flex-col pt-20  duration-500`}>
           <motion.div
-            initial={{ opacity: 0, y: -50 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            exit={{ opacity: 0 }}
             transition={{
-              duration: 1.7,
+              duration: 1.3,
             }}
             className="pointer-events-auto lg:ml-36 flex justify-center items-center lg:justify-start lg:items-start"
           >

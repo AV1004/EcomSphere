@@ -4,16 +4,12 @@ import {
   CardHeader,
   CardBody,
   Typography,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
   Button,
 } from "@material-tailwind/react";
-import { Dilog } from "./Dilog";
 import { MdDelete } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import FormDilog from "./FormDilog";
+import { motion } from "framer-motion";
 
 const products = [
   {
@@ -93,70 +89,92 @@ export default function UserProds() {
         <section
           className={`flex w-full h-full flex-col lg:pt-28 pt-14 duration-500`}
         >
-          <Typography
-            className="flex w-full lg:text-5xl text-3xl lg:mb-0 mb-5 justify-center"
-            color="teal"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.3 }}
           >
-            User Products
-          </Typography>
-          <div className="pointer-events-auto lg:mr-36 flex justify-center items-center lg:justify-end lg:items-end">
-            <Button
-              color="blue-gray"
-              onClick={() => {
-                setIsEdit(false);
-                setOpenDilog(true);
-              }}
+            <Typography
+              className="flex w-full lg:text-5xl text-3xl lg:mb-0 mb-5 justify-center"
+              color="teal"
+              transition={{ duration: 0.5 }}
             >
-              Add New Product
-            </Button>
-          </div>
+              User Products
+            </Typography>
+            <div className="pointer-events-auto lg:mr-36 flex justify-center items-center lg:justify-end lg:items-end">
+              <Button
+                color="blue-gray"
+                onClick={() => {
+                  setIsEdit(false);
+                  setOpenDilog(true);
+                }}
+              >
+                Add New Product
+              </Button>
+            </div>
+          </motion.div>
           <div className="mt-4 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
-            {products.map((product) => {
+            {products.map((product, index) => {
               return (
-                <Card className="w-64 lg:w-64 h-[91%] mb-10" key={product.name}>
-                  <CardHeader floated={false} className="">
-                    <img
-                      src="https://docs.material-tailwind.com/img/team-3.jpg"
-                      alt="profile-picture"
-                    />
-                  </CardHeader>
-                  <CardBody className="text-center">
-                    <Typography variant="h4" color="blue-gray" className="mb-2">
-                      {product.name}
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="font-medium"
-                      textGradient
-                    >
-                      {product.category}
-                    </Typography>
-                    <div className="flex items-center justify-center mt-3">
-                      <Typography variant="h3" color="black">
-                        ${product.price}
-                      </Typography>
-                    </div>
-                    <div className="flex gap-2 justify-center items-center mt-3">
-                      <Button color="teal" size="sm" className="flex gap-2">
-                        Delete
-                        <MdDelete size={17} />
-                      </Button>
-                      <Button
-                        color="teal"
-                        className="flex gap-2"
-                        size="sm"
-                        onClick={() => {
-                          setIsEdit(true);
-                          setProductForDilog(product);
-                          setOpenDilog(true);
-                        }}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                >
+                  <Card
+                    className="w-64 lg:w-64 h-[91%] mb-10"
+                    key={product.name}
+                  >
+                    <CardHeader floated={false} className="">
+                      <img
+                        src="https://docs.material-tailwind.com/img/team-3.jpg"
+                        alt="profile-picture"
+                      />
+                    </CardHeader>
+                    <CardBody className="text-center">
+                      <Typography
+                        variant="h4"
+                        color="blue-gray"
+                        className="mb-2"
                       >
-                        Edit
-                        <FaRegEdit size={17} />
-                      </Button>
-                    </div>
-                  </CardBody>
-                </Card>
+                        {product.name}
+                      </Typography>
+                      <Typography
+                        color="blue-gray"
+                        className="font-medium"
+                        textGradient
+                      >
+                        {product.category}
+                      </Typography>
+                      <div className="flex items-center justify-center mt-3">
+                        <Typography variant="h3" color="black">
+                          ${product.price}
+                        </Typography>
+                      </div>
+                      <div className="flex gap-2 justify-center items-center mt-3">
+                        <Button color="teal" size="sm" className="flex gap-2">
+                          Delete
+                          <MdDelete size={17} />
+                        </Button>
+                        <Button
+                          color="teal"
+                          className="flex gap-2"
+                          size="sm"
+                          onClick={() => {
+                            setIsEdit(true);
+                            setProductForDilog(product);
+                            setOpenDilog(true);
+                          }}
+                        >
+                          Edit
+                          <FaRegEdit size={17} />
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </Card>
+                </motion.div>
               );
             })}
           </div>
