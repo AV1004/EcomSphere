@@ -11,7 +11,7 @@ import { NavLink } from "react-router-dom";
 import { useAtom } from "jotai";
 import { currentPageAtom } from "./UI";
 
-function NavItem({ label, to }) {
+function NavItem({ label, to, handleOpen }) {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
   return (
     <NavLink
@@ -21,28 +21,36 @@ function NavItem({ label, to }) {
       }}
     >
       <Typography as="li" color="white" className="p-1 font-medium ">
-        <button>{label}</button>
+        <button onClick={handleOpen}>{label}</button>
       </Typography>
     </NavLink>
   );
 }
 
-function NavList() {
+function NavList({ handleOpen }) {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-3  lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-8 pointer-events-auto">
       <>
         <NavItem
+          handleOpen={handleOpen}
           className="pointer-events-auto"
           label="Products"
           to={"/products"}
         />
-        <NavItem className="pointer-events-auto" label="Cart" to={"/cart"} />
         <NavItem
+          handleOpen={handleOpen}
+          className="pointer-events-auto"
+          label="Cart"
+          to={"/cart"}
+        />
+        <NavItem
+          handleOpen={handleOpen}
           className="pointer-events-auto"
           label="Orders"
           to={"/orders"}
         />
         <NavItem
+          handleOpen={handleOpen}
           className="pointer-events-auto"
           label="Your Products"
           to={"/yourProducts"}
@@ -78,6 +86,7 @@ export const NavbarCom = ({ isAuthenticated }) => {
                 color="white"
                 className="mr-4 cursor-pointer text-lg font-bold pointer-events-auto"
                 onClick={() => {
+                  setOpen(false);
                   setCurrentPage("home");
                 }}
               >
@@ -142,11 +151,11 @@ export const NavbarCom = ({ isAuthenticated }) => {
               )}
             </IconButton>
           </div>
-          <Collapse open={open} className="pointer-events-auto">
-            <div className="mt-2 rounded-xl   flex flex-col items-center justify-center bg-[#171720] py-2">
+          <Collapse open={open} className="pointer-events-auto ">
+            <div className="mt-2 rounded-xl   flex flex-col items-center justify-center bg-blue-gray-900 lg:bg-[#171720] py-2">
               {isAuthenticated === true ? (
                 <div>
-                  <NavList />
+                  <NavList handleOpen={handleOpen} />
                   <NavLink to={"/profile"}>
                     <Button
                       color="teal"

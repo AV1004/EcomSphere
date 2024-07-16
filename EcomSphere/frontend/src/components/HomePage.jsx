@@ -4,8 +4,8 @@ import React, { Suspense } from "react";
 import { UI } from "./UI";
 import { HeroSection } from "./HeroSection";
 
-const isMoblie = window.innerWidth < 768;
 export const HomePage = ({ isAuthenticated }) => {
+  const isMoblie = window.innerWidth < 768;
   return (
     <>
       <Canvas
