@@ -13,6 +13,7 @@ import {
 import { Dilog } from "./Dilog";
 import { BiDetail } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const products = [
   {
@@ -90,7 +91,15 @@ export default function ProductsPage() {
     <>
       <div className="fixed inset-0 pointer-events-none">
         <section className={`flex w-full h-full flex-col pt-20  duration-500`}>
-          <div className="pointer-events-auto lg:ml-36 flex justify-center items-center lg:justify-start lg:items-start">
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              duration: 1.7,
+            }}
+            className="pointer-events-auto lg:ml-36 flex justify-center items-center lg:justify-start lg:items-start"
+          >
             <Menu
               animate={{
                 mount: { y: 0 },
@@ -153,111 +162,127 @@ export default function ProductsPage() {
                 </MenuItem>
               </MenuList>
             </Menu>
-          </div>
+          </motion.div>
           <div className="lg:mt-3 mt-5 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
             {whatToSee === "All Products"
-              ? products.map((product) => (
-                  <Card className="w-80 lg:w-96 mb-10" key={product.name}>
-                    <CardHeader floated={false} className="lg:h-80 ">
-                      <img
-                        src="https://docs.material-tailwind.com/img/team-3.jpg"
-                        alt="profile-picture"
-                      />
-                    </CardHeader>
-                    <CardBody className="text-center">
-                      <Typography
-                        variant="h4"
-                        color="blue-gray"
-                        className="mb-2"
-                      >
-                        {product.name}
-                      </Typography>
-                      <Typography
-                        color="blue-gray"
-                        className="font-medium"
-                        textGradient
-                      >
-                        {product.postedBy}
-                      </Typography>
-                      <Typography
-                        color="blue-gray"
-                        className="font-medium"
-                        textGradient
-                      >
-                        {product.category}
-                      </Typography>
-                      <div className="flex items-center justify-center mt-3">
-                        <Typography variant="h3" color="black">
-                          ${product.price}
-                        </Typography>
-                      </div>
-                      <div className="flex lg:flex-row flex-col gap-2 justify-center items-center  mt-3">
-                        <Button
-                          color="teal"
-                          onClick={() => {
-                            setProductForDilog(product);
-                            setOpenDilog(true);
-                          }}
-                          className="flex gap-2 "
+              ? products.map((product, index) => (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                  >
+                    <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                      <CardHeader floated={false} className="lg:h-80 ">
+                        <img
+                          src="https://docs.material-tailwind.com/img/team-3.jpg"
+                          alt="profile-picture"
+                        />
+                      </CardHeader>
+                      <CardBody className="text-center">
+                        <Typography
+                          variant="h4"
+                          color="blue-gray"
+                          className="mb-2"
                         >
-                          Details
-                          <BiDetail size={17} />
-                        </Button>
-                        <Button color="teal" className="flex gap-2">
-                          Add to Cart <FaCartArrowDown size={17} />
-                        </Button>
-                      </div>
-                    </CardBody>
-                  </Card>
+                          {product.name}
+                        </Typography>
+                        <Typography
+                          color="blue-gray"
+                          className="font-medium"
+                          textGradient
+                        >
+                          {product.postedBy}
+                        </Typography>
+                        <Typography
+                          color="blue-gray"
+                          className="font-medium"
+                          textGradient
+                        >
+                          {product.category}
+                        </Typography>
+                        <div className="flex items-center justify-center mt-3">
+                          <Typography variant="h3" color="black">
+                            ${product.price}
+                          </Typography>
+                        </div>
+                        <div className="flex lg:flex-row flex-col gap-2 justify-center items-center  mt-3">
+                          <Button
+                            color="teal"
+                            onClick={() => {
+                              setProductForDilog(product);
+                              setOpenDilog(true);
+                            }}
+                            className="flex gap-2 "
+                          >
+                            Details
+                            <BiDetail size={17} />
+                          </Button>
+                          <Button color="teal" className="flex gap-2">
+                            Add to Cart <FaCartArrowDown size={17} />
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </motion.div>
                 ))
-              : products.map((product) => {
+              : products.map((product, index) => {
                   if (product.category === whatToSee) {
                     return (
-                      <Card className="w-80 lg:w-96 mb-10" key={product.name}>
-                        <CardHeader floated={false} className="lg:h-80 ">
-                          <img
-                            src="https://docs.material-tailwind.com/img/team-3.jpg"
-                            alt="profile-picture"
-                          />
-                        </CardHeader>
-                        <CardBody className="text-center">
-                          <Typography
-                            variant="h4"
-                            color="blue-gray"
-                            className="mb-2"
-                          >
-                            {product.name}
-                          </Typography>
-                          <Typography
-                            color="blue-gray"
-                            className="font-medium"
-                            textGradient
-                          >
-                            {product.postedBy}
-                          </Typography>
-                          <div className="flex items-center justify-center mt-3">
-                            <Typography variant="h3" color="black">
-                              ${product.price}
-                            </Typography>
-                          </div>
-                          <div className="flex gap-2 justify-center items-center mt-3">
-                            <Button
-                              color="teal"
-                              onClick={() => {
-                                setProductForDilog(product);
-                                setOpenDilog(true);
-                              }}
-                              className="flex gap-2"
+                      <motion.div
+                        initial={{ opacity: 0, y: -50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{
+                          duration: 0.5,
+                        }}
+                      >
+                        <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                          <CardHeader floated={false} className="lg:h-80 ">
+                            <img
+                              src="https://docs.material-tailwind.com/img/team-3.jpg"
+                              alt="profile-picture"
+                            />
+                          </CardHeader>
+                          <CardBody className="text-center">
+                            <Typography
+                              variant="h4"
+                              color="blue-gray"
+                              className="mb-2"
                             >
-                              Details
-                              <BiDetail size={17} />
-                            </Button>
-                            <Button color="teal" className="flex gap-2">
-                              Add to Cart <FaCartArrowDown size={17} />
-                            </Button>
-                          </div>
-                        </CardBody>
-                      </Card>
+                              {product.name}
+                            </Typography>
+                            <Typography
+                              color="blue-gray"
+                              className="font-medium"
+                              textGradient
+                            >
+                              {product.postedBy}
+                            </Typography>
+                            <div className="flex items-center justify-center mt-3">
+                              <Typography variant="h3" color="black">
+                                ${product.price}
+                              </Typography>
+                            </div>
+                            <div className="flex gap-2 justify-center items-center mt-3">
+                              <Button
+                                color="teal"
+                                onClick={() => {
+                                  setProductForDilog(product);
+                                  setOpenDilog(true);
+                                }}
+                                className="flex gap-2"
+                              >
+                                Details
+                                <BiDetail size={17} />
+                              </Button>
+                              <Button color="teal" className="flex gap-2">
+                                Add to Cart <FaCartArrowDown size={17} />
+                              </Button>
+                            </div>
+                          </CardBody>
+                        </Card>
+                      </motion.div>
                     );
                   }
                 })}
