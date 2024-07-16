@@ -36,6 +36,9 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
           <Typography color="white" variant="h5">
             Price:${product.price}
           </Typography>
+          <Typography color="white" variant="h6">
+            {product.category}
+          </Typography>
           <Typography color="teal" className="text-center font-normal">
             {product.description}
           </Typography>

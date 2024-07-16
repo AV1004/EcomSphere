@@ -20,6 +20,7 @@ const products = [
     imageUrl: "https://example.com/mens-tshirt.jpg",
     price: 19.99,
     description: "A comfortable cotton t-shirt.",
+    category: "Clothing",
     postedBy: "Valay Andhariya",
   },
   {
@@ -27,6 +28,7 @@ const products = [
     imageUrl: "https://example.com/mens-jeans.jpg",
     price: 49.99,
     description: "Stylish and durable denim jeans.",
+    category: "Elctronics",
     postedBy: "Valay Andhariya",
   },
   {
@@ -34,6 +36,7 @@ const products = [
     imageUrl: "https://example.com/womens-dress.jpg",
     price: 39.99,
     description: "A beautiful summer dress.",
+    category: "Footwear",
     postedBy: "Valay Andhariya",
   },
   {
@@ -41,6 +44,7 @@ const products = [
     imageUrl: "https://example.com/womens-top.jpg",
     price: 29.99,
     description: "A stylish top for all occasions.",
+    category: "Clothing",
     postedBy: "Valay Andhariya",
   },
   {
@@ -48,6 +52,7 @@ const products = [
     imageUrl: "https://example.com/smartphone.jpg",
     price: 599.99,
     description: "A latest model smartphone with high-end features.",
+    category: "Footwear",
     postedBy: "Valay Andhariya",
   },
   {
@@ -55,6 +60,7 @@ const products = [
     imageUrl: "https://example.com/smartphone2.jpg",
     price: 499.99,
     description: "An affordable smartphone with all the essential features.",
+    category: "Furniture",
     postedBy: "Valay Andhariya",
   },
   {
@@ -62,6 +68,7 @@ const products = [
     imageUrl: "https://example.com/laptop.jpg",
     price: 999.99,
     description: "A powerful laptop for professionals.",
+    category: "Footwear",
     postedBy: "Valay Andhariya",
   },
   {
@@ -69,6 +76,7 @@ const products = [
     imageUrl: "https://example.com/laptop2.jpg",
     price: 799.99,
     description: "A lightweight and portable laptop.",
+    category: "Furniture",
     postedBy: "Valay Andhariya",
   },
 ];
@@ -146,52 +154,113 @@ export default function ProductsPage() {
               </MenuList>
             </Menu>
           </div>
-          <div className="mt-10 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
-            {products.map((product) => {
-              return (
-                <Card className="w-80 lg:w-96 mb-10" key={product.name}>
-                  <CardHeader floated={false} className="lg:h-80 ">
-                    <img
-                      src="https://docs.material-tailwind.com/img/team-3.jpg"
-                      alt="profile-picture"
-                    />
-                  </CardHeader>
-                  <CardBody className="text-center">
-                    <Typography variant="h4" color="blue-gray" className="mb-2">
-                      {product.name}
-                    </Typography>
-                    <Typography
-                      color="blue-gray"
-                      className="font-medium"
-                      textGradient
-                    >
-                      {product.postedBy}
-                    </Typography>
-                    <div className="flex items-center justify-center mt-3">
-                      <Typography variant="h3" color="black">
-                        ${product.price}
-                      </Typography>
-                    </div>
-                    <div className="flex gap-2 justify-center items-center mt-3">
-                      <Button
-                        color="teal"
-                        onClick={() => {
-                          setProductForDilog(product);
-                          setOpenDilog(true);
-                        }}
-                        className="flex gap-2"
+          <div className="lg:mt-3 mt-5 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
+            {whatToSee === "All Products"
+              ? products.map((product) => (
+                  <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                    <CardHeader floated={false} className="lg:h-80 ">
+                      <img
+                        src="https://docs.material-tailwind.com/img/team-3.jpg"
+                        alt="profile-picture"
+                      />
+                    </CardHeader>
+                    <CardBody className="text-center">
+                      <Typography
+                        variant="h4"
+                        color="blue-gray"
+                        className="mb-2"
                       >
-                        Details
-                        <BiDetail size={17} />
-                      </Button>
-                      <Button color="teal" className="flex gap-2">
-                        Add to Cart <FaCartArrowDown size={17} />
-                      </Button>
-                    </div>
-                  </CardBody>
-                </Card>
-              );
-            })}
+                        {product.name}
+                      </Typography>
+                      <Typography
+                        color="blue-gray"
+                        className="font-medium"
+                        textGradient
+                      >
+                        {product.postedBy}
+                      </Typography>
+                      <Typography
+                        color="blue-gray"
+                        className="font-medium"
+                        textGradient
+                      >
+                        {product.category}
+                      </Typography>
+                      <div className="flex items-center justify-center mt-3">
+                        <Typography variant="h3" color="black">
+                          ${product.price}
+                        </Typography>
+                      </div>
+                      <div className="flex lg:flex-row flex-col gap-2 justify-center items-center  mt-3">
+                        <Button
+                          color="teal"
+                          onClick={() => {
+                            setProductForDilog(product);
+                            setOpenDilog(true);
+                          }}
+                          className="flex gap-2 "
+                        >
+                          Details
+                          <BiDetail size={17} />
+                        </Button>
+                        <Button color="teal" className="flex gap-2">
+                          Add to Cart <FaCartArrowDown size={17} />
+                        </Button>
+                      </div>
+                    </CardBody>
+                  </Card>
+                ))
+              : products.map((product) => {
+                  if (product.category === whatToSee) {
+                    return (
+                      <Card className="w-80 lg:w-96 mb-10" key={product.name}>
+                        <CardHeader floated={false} className="lg:h-80 ">
+                          <img
+                            src="https://docs.material-tailwind.com/img/team-3.jpg"
+                            alt="profile-picture"
+                          />
+                        </CardHeader>
+                        <CardBody className="text-center">
+                          <Typography
+                            variant="h4"
+                            color="blue-gray"
+                            className="mb-2"
+                          >
+                            {product.name}
+                          </Typography>
+                          <Typography
+                            color="blue-gray"
+                            className="font-medium"
+                            textGradient
+                          >
+                            {product.postedBy}
+                          </Typography>
+                          <div className="flex items-center justify-center mt-3">
+                            <Typography variant="h3" color="black">
+                              ${product.price}
+                            </Typography>
+                          </div>
+                          <div className="flex gap-2 justify-center items-center mt-3">
+                            <Button
+                              color="teal"
+                              onClick={() => {
+                                setProductForDilog(product);
+                                setOpenDilog(true);
+                              }}
+                              className="flex gap-2"
+                            >
+                              Details
+                              <BiDetail size={17} />
+                            </Button>
+                            <Button color="teal" className="flex gap-2">
+                              Add to Cart <FaCartArrowDown size={17} />
+                            </Button>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    );
+                  }
+                })}
           </div>
           <Dilog
             openDilog={openDilog}
