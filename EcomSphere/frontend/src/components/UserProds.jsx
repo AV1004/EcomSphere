@@ -96,8 +96,9 @@ export default function UserProds() {
             transition={{ duration: 1.3 }}
           >
             <Typography
-              className="flex w-full lg:text-5xl text-3xl lg:mb-0 mb-5 justify-center"
-              color="teal"
+              className="flex w-full lg:text-3xl text-2xl lg:mb-0 mb-5 lg:justify-start lg:ml-10 justify-center"
+              variant="h4"
+              color="white"
               transition={{ duration: 0.5 }}
             >
               User Products

@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
+import { motion } from "framer-motion";
 
 const orders = [
   {
@@ -104,17 +105,29 @@ export const MyOrders = () => {
       <section
         className={`flex w-full h-full flex-col pt-24 pointer-events-auto  duration-500`}
       >
-        <div className="w-full lg:justify-start justify-center  flex lg:ml-10">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.3 }}
+          className="w-full lg:justify-start justify-center  flex lg:ml-10"
+        >
           <Typography color="white" variant="h3">
             Your Orders
           </Typography>
-        </div>
+        </motion.div>
         <div className="overflow-auto flex flex-col gap-11 mt-10 mb-10 scrollbar-thin scrollbar-webkit  w-full items-center">
           {orders.map((order) => (
             <Card key={order.id} className="w-[90%] bg-blue-gray-900">
               <CardBody>
                 <div className="flex lg:flex-row flex-col mx-7 gap-10">
-                  <div className="w-40">
+                  <motion.div
+                    className="w-40"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2, delay: 0.5 }}
+                  >
                     <Typography
                       variant="h4"
                       color="teal"
@@ -128,8 +141,14 @@ export const MyOrders = () => {
                     >
                       {order.id}
                     </Typography>
-                  </div>
-                  <div className="w-36">
+                  </motion.div>
+                  <motion.div
+                    className="w-36"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2, delay: 0.5 }}
+                  >
                     <Typography
                       variant="h4"
                       color="teal"
@@ -143,8 +162,14 @@ export const MyOrders = () => {
                     >
                       {order.date}
                     </Typography>
-                  </div>
-                  <div className="w-60">
+                  </motion.div>
+                  <motion.div
+                    className="w-60"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2, delay: 0.5 }}
+                  >
                     <Typography
                       variant="h4"
                       color="teal"
@@ -158,16 +183,29 @@ export const MyOrders = () => {
                     >
                       ${order.total}
                     </Typography>
-                  </div>
-                  <div className="lg:w-full lg:items-start flex lg:justify-end">
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.5, delay: 1 }}
+                    className="lg:w-full lg:items-start flex lg:justify-end"
+                  >
                     <Button color="teal" size="sm">
                       View Invoice
                     </Button>
-                  </div>
+                  </motion.div>
                 </div>
                 <div>
                   {order.products.map((product, index) => (
-                    <section key={index} className="mt-10 flex">
+                    <motion.section
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1, delay: 1.5 + index * 0.2 }}
+                      key={index}
+                      className="mt-10 flex"
+                    >
                       <div className="lg:w-80 w-24 justify-center items-center gap-2 flex flex-col">
                         <img
                           src={
@@ -185,11 +223,17 @@ export const MyOrders = () => {
                       </div>
                       <div className="ml-5 block lg:hidden">
                         <div className="flex flex-col gap-1">
-                          <Typography color="white" className="flex gap-12" variant="h6">
+                          <Typography
+                            color="white"
+                            className="flex gap-12"
+                            variant="h6"
+                          >
                             {product.category}
-                            <Typography variant="paragraph" color="teal">${product.price}</Typography>
+                            <Typography variant="paragraph" color="teal">
+                              ${product.price}
+                            </Typography>
                           </Typography>
-                          
+
                           <Typography color="white">
                             Quantity:{product.quantity}
                           </Typography>
@@ -224,7 +268,7 @@ export const MyOrders = () => {
                           </Typography>
                         </div>
                       </div>
-                    </section>
+                    </motion.section>
                   ))}
                 </div>
               </CardBody>
