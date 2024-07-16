@@ -1,15 +1,10 @@
 import React from "react";
-import { PencilIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   Typography,
   Button,
   CardBody,
-  Chip,
   CardFooter,
-  Avatar,
-  IconButton,
-  Tooltip,
 } from "@material-tailwind/react";
 import { IoBagCheckOutline } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
@@ -21,6 +16,7 @@ const TABLE_ROWS = [
   {
     img: "https://docs.material-tailwind.com/img/team-3.jpg",
     name: "Spotify",
+    category: "Furniture",
     price: 123,
     total: 2500,
     quantity: 2,
@@ -28,6 +24,7 @@ const TABLE_ROWS = [
   {
     img: "https://docs.material-tailwind.com/img/team-3.jpg",
     name: "Spotify",
+    category: "Footwear",
     price: 123,
     total: 2500,
     quantity: 1,
@@ -35,6 +32,7 @@ const TABLE_ROWS = [
   {
     img: "https://docs.material-tailwind.com/img/team-3.jpg",
     name: "Spotify",
+    category: "Clothing",
     price: 123,
     total: 2500,
     quantity: 5,
@@ -78,7 +76,10 @@ export default function Cart() {
                 </thead>
                 <tbody className="border-0">
                   {TABLE_ROWS.map(
-                    ({ img, name, price, total, quantity }, index) => {
+                    (
+                      { img, name, price, total, quantity, category },
+                      index
+                    ) => {
                       return (
                         <tr key={index}>
                           <td className="p-4">
@@ -88,13 +89,20 @@ export default function Cart() {
                                 alt={name}
                                 className="lg:h-24 lg:w-24 h-16 w-16"
                               />
-                              <div className="flex flex-col gap-2 justify-center">
+                              <div className="flex flex-col gap-2 justify-start">
                                 <Typography
                                   variant="h6"
                                   color="white"
-                                  className="font-bold"
+                                  className="font-bold flex gap-2"
                                 >
                                   {name}
+                                  <Typography
+                                    variant="h6"
+                                    color="white"
+                                    className="font-bold"
+                                  >
+                                    ({category})
+                                  </Typography>
                                 </Typography>
                                 <Typography
                                   variant="h6"
@@ -103,7 +111,7 @@ export default function Cart() {
                                 >
                                   Price:${price}
                                 </Typography>
-                                <button className="text-teal-700 font-semibold">
+                                <button className="text-teal-700 w-16 font-semibold">
                                   Remove
                                 </button>
                               </div>
