@@ -118,6 +118,9 @@ export const ProfilePage = () => {
               }`}
               selected={showContent === "accountSettings" ? true : false}
               onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
                 setShowContent("accountSettings");
               }}
             >
@@ -132,6 +135,9 @@ export const ProfilePage = () => {
               }`}
               selected={showContent === "myOrders" ? true : false}
               onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
                 setShowContent("myOrders");
               }}
             >
@@ -160,6 +166,9 @@ export const ProfilePage = () => {
               }`}
               selected={showContent === "address" ? true : false}
               onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
                 setShowContent("address");
               }}
             >
@@ -174,6 +183,9 @@ export const ProfilePage = () => {
               }`}
               selected={showContent === "legalNotice" ? true : false}
               onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
                 setShowContent("legalNotice");
               }}
             >
@@ -188,6 +200,9 @@ export const ProfilePage = () => {
               }`}
               selected={showContent === "changePass" ? true : false}
               onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
                 setShowContent("changePass");
               }}
             >
@@ -446,7 +461,7 @@ export const ProfilePage = () => {
                         duration: 1.8,
                       }}
                     >
-                      EcomSphere - 3D E-Commerce Platform
+                      EcomSphere  E-Commerce Platform
                       <br />
                       Effective Date: July 14, 2024
                     </motion.p>
