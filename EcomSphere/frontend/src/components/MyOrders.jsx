@@ -104,51 +104,104 @@ export const MyOrders = () => {
       <section
         className={`flex w-full h-full flex-col pt-24 pointer-events-auto  duration-500`}
       >
-        <div className="w-full justify-start ml-10">
+        <div className="w-full lg:justify-start justify-center  flex lg:ml-10">
           <Typography color="white" variant="h3">
             Your Orders
           </Typography>
         </div>
         <div className="overflow-auto flex flex-col gap-11 mt-10 mb-10 scrollbar-thin scrollbar-webkit  w-full items-center">
           {orders.map((order) => (
-            <Card className="w-[90%] bg-blue-gray-900">
+            <Card key={order.id} className="w-[90%] bg-blue-gray-900">
               <CardBody>
-                <div className="flex mx-7 gap-10">
+                <div className="flex lg:flex-row flex-col mx-7 gap-10">
                   <div className="w-40">
-                    <Typography variant="h4" color="teal">
+                    <Typography
+                      variant="h4"
+                      color="teal"
+                      className="lg:text-xl text-lg"
+                    >
                       Order ID
                     </Typography>
-                    <Typography className="mt-3" color="white">
+                    <Typography
+                      className="mt-3 lg:text-md text-sm"
+                      color="white"
+                    >
                       {order.id}
                     </Typography>
                   </div>
                   <div className="w-36">
-                    <Typography variant="h4" color="teal">Date</Typography>
-                    <Typography className="mt-3" color="white">{order.date}</Typography>
+                    <Typography
+                      variant="h4"
+                      color="teal"
+                      className="lg:text-xl text-lg"
+                    >
+                      Date
+                    </Typography>
+                    <Typography
+                      className="mt-3 lg:text-md text-sm"
+                      color="white"
+                    >
+                      {order.date}
+                    </Typography>
                   </div>
                   <div className="w-60">
-                    <Typography variant="h4" color="teal">Total Amount</Typography>
-                    <Typography className="mt-3" color="white">${order.total}</Typography>
+                    <Typography
+                      variant="h4"
+                      color="teal"
+                      className="lg:text-xl text-lg"
+                    >
+                      Total Amount
+                    </Typography>
+                    <Typography
+                      className="mt-3 lg:text-md text-sm"
+                      color="white"
+                    >
+                      ${order.total}
+                    </Typography>
                   </div>
-                  <div className="w-full items-start flex justify-end">
-                    <Button color="teal">View Invoice</Button>
+                  <div className="lg:w-full lg:items-start flex lg:justify-end">
+                    <Button color="teal" size="sm">
+                      View Invoice
+                    </Button>
                   </div>
                 </div>
                 <div>
-                  {order.products.map((product) => (
-                    <section className="mt-10 flex">
-                      <div className="w-80 justify-center flex">
+                  {order.products.map((product, index) => (
+                    <section key={index} className="mt-10 flex">
+                      <div className="lg:w-80 w-24 justify-center items-center gap-2 flex flex-col">
                         <img
                           src={
                             "https://docs.material-tailwind.com/img/team-3.jpg"
                           }
                           alt={product.name}
-                          className="h-[10rem]"
+                          className="lg:h-[10rem] h-24"
                         />
+                        <Typography
+                          color="teal"
+                          className="text-xs block lg:hidden"
+                        >
+                          {product.name}
+                        </Typography>
                       </div>
-                      <div className="w-full mt-5 ">
+                      <div className="ml-5 block lg:hidden">
+                        <div className="flex flex-col gap-1">
+                          <Typography color="white" className="flex gap-12" variant="h6">
+                            {product.category}
+                            <Typography variant="paragraph" color="teal">${product.price}</Typography>
+                          </Typography>
+                          
+                          <Typography color="white">
+                            Quantity:{product.quantity}
+                          </Typography>
+                        </div>
+                      </div>
+                      <div className="w-full mt-5 lg:block hidden">
                         <div className="flex w-full">
-                          <Typography variant="h4" color="teal" className="w-96">
+                          <Typography
+                            variant="h4"
+                            color="teal"
+                            className="w-96"
+                          >
                             {product.name}
                             <Typography color="white">
                               {product.category}
@@ -163,7 +216,9 @@ export const MyOrders = () => {
                           </Typography>
                         </div>
                         <div>
-                          <Typography color="white">{product.description}</Typography>
+                          <Typography color="white">
+                            {product.description}
+                          </Typography>
                           <Typography variant="paragraph" color="white">
                             Quantity : {product.quantity}
                           </Typography>
