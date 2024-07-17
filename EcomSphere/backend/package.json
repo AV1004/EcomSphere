@@ -1,0 +1,14 @@
+{
+  "name": "ecomsphere_api",
+  "version": "1.0.0",
+  "description": "This module is an api of ecomsphere",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecommerce"
+  ],
+  "author": "Valay Andhariya",
+  "license": "ISC"
+}
