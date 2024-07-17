@@ -217,7 +217,6 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
               className={` ${
                 showContent === "changePass" ? "text-black" : "text-white"
               }`}
-              selected={showContent === "changePass" ? true : false}
               onClick={() => {
                 setIsAuthenticated(false);
                 navigate("/");
