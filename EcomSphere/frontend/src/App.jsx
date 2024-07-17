@@ -16,7 +16,7 @@ import { MyOrders } from "./components/MyOrders";
 
 function App() {
   const [started, setStarted] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <>
@@ -39,10 +39,18 @@ function App() {
         </Route>
         <Route path="/signin" element={<Root2 />}>
           <Route index={true} element={<SignIn />} />
-          <Route path={"otp"} element={<OTP type={"signin"} />} />
+          <Route
+            path={"otp"}
+            element={
+              <OTP type={"signin"} setIsAuthenticated={setIsAuthenticated} />
+            }
+          />
         </Route>
 
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/profile"
+          element={<ProfilePage setIsAuthenticated={setIsAuthenticated} />}
+        />
       </Routes>
       <Cursor />
     </>

@@ -3,7 +3,7 @@ import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-export const OTP = ({ type }) => {
+export const OTP = ({ type, setIsAuthenticated }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -33,7 +33,7 @@ export const OTP = ({ type }) => {
             ? "Just a few seconds!"
             : "Verify Your Email address."}
         </Typography>
-        <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+        <form className="mt-8 mb-2 w-64 lg:w-96 max-w-screen-lg sm:w-96">
           <div className="mb-1 flex flex-col gap-6">
             {/* <Typography variant="h6" color="white" className="-mb-3">
               Enter OTP
@@ -55,13 +55,18 @@ export const OTP = ({ type }) => {
             />
           </div>
 
-          <Button
-            className="mt-6"
-            color={type === "signin" ? "white" : "black"}
-            fullWidth
-          >
-            DONE!
-          </Button>
+          <Link to={type === "signin" ? "/" : "/signin"}>
+            <Button
+              className="mt-6"
+              color={type === "signin" ? "white" : "black"}
+              fullWidth
+              onClick={() => {
+                type === "signin" ? setIsAuthenticated(true) : "";
+              }}
+            >
+              DONE!
+            </Button>
+          </Link>
           <Typography
             color="blue-gray"
             className="mt-4 text-center font-normal"

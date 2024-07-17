@@ -17,10 +17,11 @@ import {
   Textarea,
 } from "@material-tailwind/react";
 import { CiAlignLeft } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegAddressBook } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
 import { RiPagesFill } from "react-icons/ri";
+import { CiLogout } from "react-icons/ci";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { motion } from "framer-motion";
 
@@ -60,11 +61,12 @@ const TABLE_ROWS = [
   },
 ];
 
-export const ProfilePage = () => {
+export const ProfilePage = ({ setIsAuthenticated }) => {
   const isMoblie = window.innerWidth < 768;
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
+  const navigate = useNavigate();
 
   const [showContent, setShowContent] = useState("accountSettings");
 
@@ -210,6 +212,21 @@ export const ProfilePage = () => {
                 <TbPasswordFingerprint size={20} />
               </ListItemPrefix>
               Change Password
+            </ListItem>
+            <ListItem
+              className={` ${
+                showContent === "changePass" ? "text-black" : "text-white"
+              }`}
+              selected={showContent === "changePass" ? true : false}
+              onClick={() => {
+                setIsAuthenticated(false);
+                navigate("/");
+              }}
+            >
+              <ListItemPrefix>
+                <CiLogout size={20} />
+              </ListItemPrefix>
+              Logout
             </ListItem>
           </List>
         </Drawer>
@@ -461,7 +478,7 @@ export const ProfilePage = () => {
                         duration: 1.8,
                       }}
                     >
-                      EcomSphere  E-Commerce Platform
+                      EcomSphere E-Commerce Platform
                       <br />
                       Effective Date: July 14, 2024
                     </motion.p>

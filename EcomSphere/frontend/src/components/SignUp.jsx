@@ -20,16 +20,16 @@ export const SignUp = () => {
         transition={{
           duration: 1.3,
         }}
-        className="flex justify-center h-[80%] items-center"
+        className="flex justify-center lg:h-[80%]  items-center"
       >
-        <Card color="white" className="p-9" shadow={false}>
+        <Card color="white" className="p-9 mb-10" shadow={false}>
           <Typography variant="h4" color="blue-gray">
             Sign Up
           </Typography>
           {/* <Typography color="gray" className="mt-1 font-normal">
           Nice to meet you! Enter your details to register.
         </Typography> */}
-          <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
+          <form className="mt-8 mb-2 w-64 lg:w-96 max-w-screen-lg ">
             <div className="mb-1 flex flex-col gap-6">
               <Typography variant="h6" color="blue-gray" className="-mb-3">
                 Your Name
@@ -79,9 +79,11 @@ export const SignUp = () => {
               />
             </div>
 
-            <Button className="mt-6" fullWidth>
-              sign up
-            </Button>
+            <Link to={"/signup/otp"}>
+              <Button className="mt-6" fullWidth>
+                sign up
+              </Button>
+            </Link>
             <Typography color="gray" className="mt-4 text-center font-normal">
               Already have an account?{" "}
               <Link to={"/signin"} className="font-medium text-gray-900">
