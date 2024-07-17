@@ -94,7 +94,7 @@ export default function FormDilog({
                 mount: { y: 0 },
                 unmount: { y: 25 },
               }}
-              defaultValue={isEdit === true ? product.category : ""}
+              value={isEdit === true ? product.category : ""}
             >
               <Option>Clothing</Option>
               <Option>Elctronics</Option>

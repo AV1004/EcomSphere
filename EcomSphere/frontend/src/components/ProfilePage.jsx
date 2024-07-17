@@ -459,12 +459,12 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
                   className="m-0 w-2/5 shrink-0 flex justify-center items-center rounded-r-none"
                 >
                   <img
-                    src="http://localhost:5173/images/notice.jpg"
+                    src="https://ecom-sphere.vercel.app/images/notice.jpg"
                     alt="card-image"
                     className="w-full  object-cover"
                   />
                 </CardHeader>
-                <CardBody className="overflow-scroll">
+                <CardBody className="overflow-auto scrollbar-thin scrollbar-webkit">
                   <Typography
                     variant="h5"
                     color="white"

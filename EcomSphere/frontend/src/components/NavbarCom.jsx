@@ -159,7 +159,7 @@ export const NavbarCom = ({ isAuthenticated }) => {
                   <NavLink to={"/profile"}>
                     <Button
                       color="teal"
-                      className="mb-2 pointer-events-auto "
+                      className="mb-2 m-1.5 pointer-events-auto "
                       onClick={() => {
                         setCurrentPage("home");
                       }}

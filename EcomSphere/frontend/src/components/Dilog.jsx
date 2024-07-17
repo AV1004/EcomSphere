@@ -17,7 +17,7 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
       <Dialog
         open={openDilog}
         handler={handleOpen}
-        className="bg-blue-gray-900"
+        className="bg-blue-gray-900 "
       >
         <DialogHeader>
           <Typography variant="h5" color="teal">
@@ -30,10 +30,14 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
             src="https://docs.material-tailwind.com/img/team-3.jpg"
             alt="profile-picture"
           />
-          <Typography color="white" variant="h4">
+          <Typography
+            color="white"
+            variant="h4"
+            className="lg:text-2xl text-lg"
+          >
             Posted by:{product.postedBy}
           </Typography>
-          <Typography color="white" variant="h5">
+          <Typography color="white" variant="h5" className="lg:text-xl text-md">
             Price:${product.price}
           </Typography>
           <Typography color="white" variant="h6">
