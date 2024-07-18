@@ -13,10 +13,14 @@
   "author": "Valay Andhariya",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.5.1"
+    "express-validator": "^7.1.0",
+    "mongoose": "^8.5.1",
+    "nodemailer": "^6.9.14",
+    "otp-generator": "^4.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
