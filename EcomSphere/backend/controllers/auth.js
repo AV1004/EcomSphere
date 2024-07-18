@@ -61,7 +61,7 @@ exports.signUp = async (req, res, next) => {
     });
 };
 
-exports.login = (req, res, next) => {
+exports.login = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -73,7 +73,26 @@ exports.login = (req, res, next) => {
     next(error);
   }
 
-  const { email, password } = req.body;
+  const { email, password, otp } = req.body;
+
+  try {
+    // Find the most recent OTP for the email and Verify it!
+    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+    if (response.length === 0 || otp !== response[0].otp) {
+      console.log(response);
+      // console.log(response[0].otp, otp);
+      return res.status(400).json({
+        success: false,
+        message: "The OTP is not valid",
+      });
+    }
+  } catch (err) {
+    if (!err.statusCode) {
+      // Not Found
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 
   User.findOne({ email })
     .then((user) => {
@@ -92,6 +111,4 @@ exports.login = (req, res, next) => {
         next(error);
       }
     });
-
-  return res.json({ result: "Correct Password Now you can do JWT stuff!" });
 };
