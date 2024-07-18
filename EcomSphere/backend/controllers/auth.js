@@ -1,5 +1,7 @@
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 const User = require("../models/user");
 const OTP = require("../models/otp");
 
@@ -12,7 +14,7 @@ exports.signUp = async (req, res, next) => {
     // Unprocessable Entity!
     error.statusCode = 422;
     error.data = errors.array();
-    next(error);
+    throw error;
   }
 
   const email = req.body.email;
@@ -70,7 +72,7 @@ exports.login = async (req, res, next) => {
     // Unprocessable Entity!
     error.statusCode = 422;
     error.data = errors.array();
-    next(error);
+    throw error;
   }
 
   const { email, password, otp } = req.body;
@@ -94,21 +96,41 @@ exports.login = async (req, res, next) => {
     next(err);
   }
 
+  let loadedUser;
+
   User.findOne({ email })
     .then((user) => {
       if (!user) {
         const error = new Error("User does not exists!");
         error.statusCode = 401;
-        next(error);
+        throw error;
       }
-
+      loadedUser = user;
       return bcrypt.compare(password, user.password);
     })
     .then((isEqual) => {
       if (!isEqual) {
         const error = new Error("Incorrect Password please try again!");
         error.statusCode = 401;
-        next(error);
+        throw error;
       }
+
+      // Here we set JWT token in our server that we can use for authentication!
+      const token = jwt.sign(
+        {
+          email: loadedUser.email,
+          userId: loadedUser._id.toString(),
+        },
+        process.env.JWT_KEY,
+        { expiresIn: "1h" }
+      );
+
+      res.status(200).json({ token: token, userId: loadedUser._id.toString() });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
