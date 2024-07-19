@@ -26,6 +26,7 @@ export const sendOTP = async (email, isLogin, password) => {
   //   }
 };
 
+// function for register req
 export const register = async (email, name, password, otp) => {
   const res = await fetch(server + "/auth/signup", {
     method: "PUT",
@@ -45,6 +46,7 @@ export const register = async (email, name, password, otp) => {
   return resData;
 };
 
+// function for login req
 export const login = async (email, password, otp) => {
   const res = await fetch(server + "/auth/login", {
     method: "POST",
