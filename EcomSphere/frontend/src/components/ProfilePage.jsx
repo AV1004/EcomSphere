@@ -24,6 +24,7 @@ import { RiPagesFill } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { motion } from "framer-motion";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 // Dummy Orders Table Data
 const TABLE_HEAD = ["Id", "Status", "Order Date", "Total", ""];
@@ -67,6 +68,8 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
   const navigate = useNavigate();
+
+  const signOut = useSignOut();
 
   const [showContent, setShowContent] = useState("accountSettings");
 
@@ -218,7 +221,8 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
                 showContent === "changePass" ? "text-black" : "text-white"
               }`}
               onClick={() => {
-                setIsAuthenticated(false);
+                // setIsAuthenticated(false);              //Logout here
+                signOut();
                 navigate("/");
               }}
             >

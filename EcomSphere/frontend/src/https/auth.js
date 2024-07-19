@@ -1,7 +1,6 @@
-import { server } from "../main";
+export const server = "http://localhost:8080";
 
 // function to sendOTP
-
 export const sendOTP = async (email, isLogin, password) => {
   let data;
   if (isLogin === true) {

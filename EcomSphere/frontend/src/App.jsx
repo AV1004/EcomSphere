@@ -1,10 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import { HomePage } from "./components/HomePage";
 import { Root } from "./components/Root";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignUp } from "./components/SignUp";
 import { SignIn } from "./components/SignIn";
-import { OTP } from "./components/OTP";
 import { Root2 } from "./components/Root2";
 import { ProfilePage } from "./components/ProfilePage";
 import { LoadingScreen } from "./components/LoadingScreen";
@@ -13,24 +12,27 @@ import Cursor from "./components/Cursor";
 import Cart from "./components/Cart";
 import UserProds from "./components/UserProds";
 import { MyOrders } from "./components/MyOrders";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
+import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 
 function App() {
   const [started, setStarted] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const isAuthenticated = useIsAuthenticated();
 
   return (
     <>
       <LoadingScreen started={started} setStarted={setStarted} />
       <Routes>
-        <Route path="/" element={<Root isAuthenticated={isAuthenticated} />}>
-          <Route
-            index={true}
-            element={<HomePage isAuthenticated={isAuthenticated} />}
-          />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/yourProducts" element={<UserProds />} />
-          <Route path="/orders" element={<MyOrders />} />
+        <Route path="/" element={<Root />}>
+          <Route index={true} element={<HomePage />} />
+          <Route element={<AuthOutlet fallbackPath="/signin" />}>
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/yourProducts" element={<UserProds />} />
+            <Route path="/orders" element={<MyOrders />} />
+          </Route>
         </Route>
 
         <Route path="/signup" element={<Root2 />}>
@@ -46,11 +48,9 @@ function App() {
             }
           /> */}
         </Route>
-
-        <Route
-          path="/profile"
-          element={<ProfilePage setIsAuthenticated={setIsAuthenticated} />}
-        />
+        <Route element={<AuthOutlet fallbackPath="/signin" />}>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Routes>
       <Cursor />
     </>

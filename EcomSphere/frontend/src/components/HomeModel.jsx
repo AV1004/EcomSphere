@@ -80,6 +80,8 @@ const OverlayItem = ({
 };
 
 export function HomeModel({ isAuthenticated, html, ...props }) {
+  const isMoblie = window.innerWidth < 768;
+
   const { nodes, materials } = useGLTF("models/EcomSphereHome.glb");
   return (
     <group {...props} dispose={null}>
@@ -269,7 +271,7 @@ export function HomeModel({ isAuthenticated, html, ...props }) {
             ? html && (
                 <OverlayItem
                   scale={2.8}
-                  position-x={-0.8}
+                  position-x={isMoblie ? -0.4 : -0.8}
                   position-y={-0.4}
                   // position-z={-1}
                   toLink={"/yourProducts"}
@@ -426,7 +428,7 @@ export function HomeModel({ isAuthenticated, html, ...props }) {
             ? html && (
                 <OverlayItem
                   scale={[0.1, 0.15, 0.1]}
-                  position-x={0.04}
+                  position-x={ isMoblie? -0.01  : 0.04}
                   position-y={0.05}
                   position-z={-0.1}
                   // rotation-y={degToRad(-90)}
@@ -442,7 +444,7 @@ export function HomeModel({ isAuthenticated, html, ...props }) {
             : html && (
                 <OverlayItem
                   scale={[0.1, 0.15, 0.1]}
-                  position-x={0.04}
+                  position-x={isMoblie ? -0.01 : 0.04}
                   position-y={0.05}
                   position-z={-0.1}
                   // rotation-y={degToRad(-90)}

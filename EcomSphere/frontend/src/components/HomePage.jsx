@@ -3,8 +3,10 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import React, { Suspense } from "react";
 import { UI } from "./UI";
 import { HeroSection } from "./HeroSection";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
-export const HomePage = ({ isAuthenticated }) => {
+export const HomePage = () => {
+  const isAuthenticated = useIsAuthenticated();
   const isMoblie = window.innerWidth < 768;
   return (
     <>

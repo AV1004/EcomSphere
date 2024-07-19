@@ -2,11 +2,11 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { NavbarCom } from "./NavbarCom";
 
-export const Root = ({ isAuthenticated }) => {
+export const Root = () => {
   return (
     <>
       <Outlet />
-      <NavbarCom isAuthenticated={isAuthenticated} />
+      <NavbarCom />
       {/* <UI /> */}
     </>
   );

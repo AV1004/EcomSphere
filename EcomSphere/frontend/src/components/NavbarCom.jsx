@@ -10,6 +10,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
 import { useAtom } from "jotai";
 import { currentPageAtom } from "./UI";
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 
 function NavItem({ label, to, handleOpen }) {
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
@@ -60,9 +61,11 @@ function NavList({ handleOpen }) {
   );
 }
 
-export const NavbarCom = ({ isAuthenticated }) => {
+export const NavbarCom = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
+
+  const isAuthenticated = useIsAuthenticated();
 
   const [currentPage, setCurrentPage] = useAtom(currentPageAtom);
 

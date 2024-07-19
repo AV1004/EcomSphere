@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { login, register, sendOTP } from "../https/auth";
 import MessageDilog from "./MessageDilog";
 import Timer from "./Timer";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 export const OTP = ({ type, setIsAuthenticated, data }) => {
   const [isVerify, setIsVerify] = useState(false);
@@ -13,6 +14,8 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
   const [duration, setDuration] = useState(1 * 60 * 1000);
 
   const [resendEnable, setResendEnable] = useState(false);
+
+  const signIn = useSignIn();
 
   const navigate = useNavigate();
 
@@ -43,12 +46,24 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
 
       console.log(loginResData);
       if (loginResData.success === true) {
+        // Setting up authentication using react auth kit
+        signIn({
+          auth: {
+            token: loginResData.token,
+            type: "Bearer",
+          },
+
+          userState: {
+            userId: loginResData.userId,
+          },
+        });
+
         setValidationMessage("Logged in successfully!");
         setIsVerify(true);
         setOpenDilog(true);
       } else {
+        // console.log("Wrong OTP");
         setValidationMessage(loginResData.message);
-        localStorage.setItem("token", loginResData.token);
         setOpenDilog(true);
       }
     }
