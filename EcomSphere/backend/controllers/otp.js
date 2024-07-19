@@ -1,10 +1,12 @@
 const otpGenerator = require("otp-generator");
+const bcrypt = require("bcrypt");
+
 const OTP = require("../models/otp");
 const User = require("../models/user");
 
 exports.sendOTP = async (req, res) => {
   try {
-    const { email, isLogin } = req.body;
+    const { email, isLogin, password } = req.body;
     if (isLogin === false) {
       // Check if user is already present
       const checkUserPresent = await User.findOne({ email });
@@ -24,8 +26,16 @@ exports.sendOTP = async (req, res) => {
           message: "User does not exists!",
         });
       }
+
+      const isEqual = await bcrypt.compare(password, checkUserPresent.password);
+      if (!isEqual) {
+        return res.status(401).json({
+          success: false,
+          message: "Incorrect Password please try again!",
+        });
+      }
     }
-    
+
     let otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
@@ -43,7 +53,7 @@ exports.sendOTP = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "OTP sent successfully",
-      otp,
+      // otp,
     });
   } catch (error) {
     console.log(error.message);

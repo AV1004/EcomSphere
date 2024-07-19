@@ -5,6 +5,8 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "@material-tailwind/react";
 
+export const server = "http://localhost:8080";
+
 const AppWrapper = () => {
   return (
     <ThemeProvider>

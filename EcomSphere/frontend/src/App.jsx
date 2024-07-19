@@ -35,16 +35,16 @@ function App() {
 
         <Route path="/signup" element={<Root2 />}>
           <Route index={true} element={<SignUp />} />
-          <Route path={"otp"} element={<OTP />} />
+          {/* <Route path={"otp"} element={<OTP />} /> */}
         </Route>
         <Route path="/signin" element={<Root2 />}>
           <Route index={true} element={<SignIn />} />
-          <Route
+          {/* <Route
             path={"otp"}
             element={
               <OTP type={"signin"} setIsAuthenticated={setIsAuthenticated} />
             }
-          />
+          /> */}
         </Route>
 
         <Route

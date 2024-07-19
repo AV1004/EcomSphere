@@ -52,7 +52,9 @@ exports.signUp = async (req, res, next) => {
     })
     .then((userDoc) => {
       // User Registered!
-      res.status(201).json({ message: "User Created!", userId: userDoc._id });
+      res
+        .status(201)
+        .json({ message: "User Created!", userId: userDoc._id, success: true });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -125,7 +127,14 @@ exports.login = async (req, res, next) => {
         { expiresIn: "1h" }
       );
 
-      res.status(200).json({ token: token, userId: loadedUser._id.toString() });
+      res
+        .status(200)
+        .json({
+          token: token,
+          userId: loadedUser._id.toString(),
+          success: true,
+          message: "Logged in successfully!",
+        });
     })
     .catch((err) => {
       if (!err.statusCode) {
