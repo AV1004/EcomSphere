@@ -42,6 +42,12 @@ const userSchema = new Schema(
       address_first: String,
       address_second: String,
     },
+    products: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   { timestamps: true }
 );

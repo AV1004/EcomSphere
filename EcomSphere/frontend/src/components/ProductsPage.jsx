@@ -160,6 +160,46 @@ export default function ProductsPage() {
                 >
                   Furniture
                 </MenuItem>
+                <MenuItem
+                  className={`${
+                    whatToSee === "Toys" ? "text-white bg-black" : ""
+                  }`}
+                  onClick={() => {
+                    setWhatToSee("Toys");
+                  }}
+                >
+                  Toys
+                </MenuItem>
+                <MenuItem
+                  className={`${
+                    whatToSee === "Books" ? "text-white bg-black" : ""
+                  }`}
+                  onClick={() => {
+                    setWhatToSee("Books");
+                  }}
+                >
+                  Books
+                </MenuItem>
+                <MenuItem
+                  className={`${
+                    whatToSee === "Sports" ? "text-white bg-black" : ""
+                  }`}
+                  onClick={() => {
+                    setWhatToSee("Sports");
+                  }}
+                >
+                  Sports
+                </MenuItem>
+                <MenuItem
+                  className={`${
+                    whatToSee === "Automotive" ? "text-white bg-black" : ""
+                  }`}
+                  onClick={() => {
+                    setWhatToSee("Automotive");
+                  }}
+                >
+                  Automotive
+                </MenuItem>
               </MenuList>
             </Menu>
           </motion.div>

@@ -34,6 +34,8 @@ export default function FormDilog({
 
   const [processing, setProcessing] = useState(undefined);
 
+  const [msgAfterSubmission, setMsgAfterSubmission] = useState("");
+
   const handleOpen = () => setOpenDilog(!openDilog);
 
   const authHeader = useAuthHeader();
@@ -76,7 +78,7 @@ export default function FormDilog({
         data.image.type === "image/jpg" ||
         data.image.type === "image/jpeg"
       ) {
-        console.log("Validation Pass");
+        // console.log("Validation Pass");
         setValidationMsg("");
         setProcessing(true);
         const imageUrl = await uploadImage(data.image);
@@ -88,6 +90,12 @@ export default function FormDilog({
           imageUrl,
           authHeader
         );
+        // console.log(resAddProdData);
+        if (resAddProdData.success === true) {
+          setMsgAfterSubmission(resAddProdData.message);
+        } else {
+          setMsgAfterSubmission("Can't add product due to technical issue!");
+        }
         setProcessing(false);
       } else {
         // console.log("false image");
@@ -154,7 +162,7 @@ export default function FormDilog({
                 variant="h4"
                 className="lg:text-xl text-sm"
               >
-                Product Added Succesfully.
+                {msgAfterSubmission}
               </Typography>
             </DialogBody>
             <DialogFooter className="space-x-2">
@@ -234,6 +242,10 @@ export default function FormDilog({
                   <Option value="Elctronics">Elctronics</Option>
                   <Option value="Footwear">Footwear</Option>
                   <Option value="Furniture">Furniture</Option>
+                  <Option value="Toys">Toys</Option>
+                  <Option value="Books">Books</Option>
+                  <Option value="Sports">Sports</Option>
+                  <Option value="Automotive">Automotive</Option>
                 </Select>
 
                 <label
