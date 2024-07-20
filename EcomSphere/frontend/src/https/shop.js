@@ -112,3 +112,17 @@ export const updatedUserProd = async (
 
   return resData;
 };
+
+// Delete Product
+export const deleteProduct = async (prodId, authHeader) => {
+  const res = await fetch(server + "/shop/deleteProd/" + prodId, {
+    method: "DELETE",
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};

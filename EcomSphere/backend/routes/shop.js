@@ -18,4 +18,6 @@ router.post("/addProd", isAuth, shopController.addProduct);
 
 router.put("/editProd", isAuth, shopController.updatedProduct);
 
+router.delete("/deleteProd/:prodId", isAuth, shopController.deleteProduct);
+
 module.exports = router;

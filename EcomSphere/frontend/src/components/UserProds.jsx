@@ -11,7 +11,13 @@ import { FaRegEdit } from "react-icons/fa";
 import FormDilog from "./FormDilog";
 import { motion } from "framer-motion";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { getuserProducts } from "../https/shop";
+import {
+  deleteImageFromCloud,
+  deleteProduct,
+  getDeleteTokenForCloud,
+  getuserProducts,
+} from "../https/shop";
+import MessageDilog from "./MessageDilog";
 
 // const products = [
 //   {
@@ -87,16 +93,62 @@ export default function UserProds() {
   const [productForDilog, setProductForDilog] = useState(products[0]);
   const authHeader = useAuthHeader();
 
+  const [openDilogMessage, setOpenDilogMessage] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+
+  const destroyImage = async (imgId) => {
+    // Getting Delete Token
+    const deleteToken = await getDeleteTokenForCloud(imgId, authHeader);
+
+    let cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    let resourceType = "image";
+    const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/destroy`;
+    const formData = new FormData();
+    formData.append("public_id", imgId);
+    formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY);
+    formData.append("signature", deleteToken.signature);
+    formData.append("timestamp", deleteToken.timestamp);
+
+    const resDataOfDestroyImg = await deleteImageFromCloud(api, formData);
+
+    return resDataOfDestroyImg;
+  };
+
   useEffect(() => {
     const giveUserProds = async () => {
       const userProdData = await getuserProducts(authHeader);
       setProducts(userProdData.products);
     };
     giveUserProds();
-  }, [openDilog]);
+  }, [openDilog, openDilogMessage]);
+
+  const deleteHandler = async (prodId, imgId) => {
+    const resdeleteImgData = await destroyImage(imgId);
+    if (resdeleteImgData.result === "ok") {
+      const resDeleteProdData = await deleteProduct(prodId, authHeader);
+      if (resDeleteProdData.success === true) {
+        setValidationMessage(resDeleteProdData.message);
+        setOpenDilogMessage(true);
+      } else {
+        setValidationMessage(resDeleteProdData.message);
+        setOpenDilogMessage(true);
+      }
+    } else {
+      {
+        setValidationMessage("Can't delete product!");
+        setOpenDilogMessage(true);
+      }
+    }
+  };
 
   return (
     <>
+      <MessageDilog
+        openDilog={openDilogMessage}
+        setOpenDilog={setOpenDilogMessage}
+        validationMessage={validationMessage}
+        color={"black"}
+      />
       <div className="fixed inset-0 pointer-events-none">
         <section
           className={`flex w-full h-full flex-col lg:pt-28 pt-14 duration-500`}
@@ -171,7 +223,17 @@ export default function UserProds() {
                           </Typography>
                         </div>
                         <div className="flex gap-2 justify-center items-center mt-3">
-                          <Button color="teal" size="sm" className="flex gap-2">
+                          <Button
+                            color="teal"
+                            onClick={() => {
+                              deleteHandler(
+                                product._id,
+                                product.imageUrl.public_id
+                              );
+                            }}
+                            size="sm"
+                            className="flex gap-2"
+                          >
                             Delete
                             <MdDelete size={17} />
                           </Button>

@@ -83,6 +83,7 @@ exports.updatedProduct = (req, res, next) => {
 
   Product.findById(prodId)
     .then((prod) => {
+      // Checking if product is exists or not!
       if (!prod) {
         const error = new Error("Could not find product!");
         error.statusCode = 404;
@@ -107,6 +108,50 @@ exports.updatedProduct = (req, res, next) => {
     .then((result) => {
       res.status(200).json({
         message: "Product edited successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.deleteProduct = (req, res, next) => {
+  const { prodId } = req.params;
+  Product.findById(prodId)
+    .then((prod) => {
+      // Checking if product is exists or not!
+      if (!prod) {
+        const error = new Error("Could not find product!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      //Authenticating that if user has created this product or not!
+      if (prod.user.toString() !== req.userId) {
+        const error = new Error("Not authorized to edit product!");
+        // Not authorized!
+        error.statusCode = 403;
+        throw error;
+      }
+
+      return Product.findByIdAndDelete(prodId);
+    })
+    .then((result) => {
+      console.log(result);
+      return User.findById(req.userId);
+    })
+    .then((user) => {
+      // to delete product from prodcuts in user in db!
+      user.products.pull(prodId);
+      return user.save();
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: "Product deleted successfully!",
         success: true,
       });
     })
