@@ -40,3 +40,17 @@ export const addProduct = async (
 
   return resData;
 };
+
+// Get User Products
+export const getuserProducts = async (authHeader) => {
+  const res = await fetch(server + "/shop/userProds", {
+    method: "GET",
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
