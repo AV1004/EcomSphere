@@ -14,6 +14,9 @@ import {
 import { FaLink } from "react-icons/fa";
 import { TiCancel } from "react-icons/ti";
 import { IoIosSave } from "react-icons/io";
+import { MdAddToPhotos, MdSmsFailed } from "react-icons/md";
+import { addProduct, uploadImageOnClound } from "../https/shop";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 export default function FormDilog({
   openDilog,
@@ -23,11 +26,76 @@ export default function FormDilog({
 }) {
   // const [open, setOpen] = useState(openDilog);
 
+  const [validationMsg, setValidationMsg] = useState("");
+
+  const [categoryValue, setCategoryValue] = useState("");
+
   const [fileInput, setFileInput] = useState(null);
+
+  const [processing, setProcessing] = useState(undefined);
 
   const handleOpen = () => setOpenDilog(!openDilog);
 
-  const [whatToSee, setWhatToSee] = useState("All Products");
+  const authHeader = useAuthHeader();
+
+  const uploadImage = async (img) => {
+    const data = new FormData();
+    data.append("file", img);
+    data.append("upload_preset", "ecom_images_preset");
+
+    try {
+      let cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+      let resourceType = "image";
+      let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+      const resDataOfUpload = await uploadImageOnClound(api, data);
+
+      // console.log(resDataOfUpload.secure_url);
+      return resDataOfUpload.secure_url;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    const fd = new FormData(event.target);
+    const data = Object.fromEntries(fd.entries());
+
+    if (isEdit !== true) {
+      if (
+        data.prodName.length === 0 ||
+        data.price.length === 0 ||
+        data.description.length === 0 ||
+        categoryValue.length === 0
+      ) {
+        setValidationMsg("Please fill out all values!");
+      } else if (
+        data.image.type === "image/png" ||
+        data.image.type === "image/jpg" ||
+        data.image.type === "image/jpeg"
+      ) {
+        console.log("Validation Pass");
+        setValidationMsg("");
+        setProcessing(true);
+        const imageUrl = await uploadImage(data.image);
+        const resAddProdData = await addProduct(
+          data.prodName,
+          data.price,
+          data.description,
+          categoryValue,
+          imageUrl,
+          authHeader
+        );
+        setProcessing(false);
+      } else {
+        // console.log("false image");
+
+        setValidationMsg("Please select appropriate file.");
+      }
+    }
+  };
 
   return (
     <>
@@ -47,13 +115,26 @@ export default function FormDilog({
             <Typography className="mb-1" variant="h4" color="cyan">
               {isEdit === true ? "Edit Product" : "Add Product"}
             </Typography>
+            {validationMsg !== "" ? (
+              <Typography className="mt-1" variant="small" color="red">
+                {validationMsg}
+              </Typography>
+            ) : (
+              ""
+            )}
           </DialogHeader>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
             className="mr-3 h-5 w-5 text-cyan-600 cursor-pointer"
-            onClick={handleOpen}
+            onClick={() => {
+              setValidationMsg("");
+              setFileInput(null);
+              setProcessing(undefined);
+              setCategoryValue("");
+              handleOpen();
+            }}
           >
             <path
               fillRule="evenodd"
@@ -62,89 +143,161 @@ export default function FormDilog({
             />
           </svg>
         </div>
-        <DialogBody>
-          {/* <Typography className="mb-10 -mt-7 " color="gray" variant="lead">
+
+        {processing === false ? (
+          <>
+            {/* After form Submission */}{" "}
+            <DialogBody divider className="grid place-items-center gap-4">
+              <MdSmsFailed size={100} color={"white"} />
+              <Typography
+                color={"white"}
+                variant="h4"
+                className="lg:text-xl text-sm"
+              >
+                Product Added Succesfully.
+              </Typography>
+            </DialogBody>
+            <DialogFooter className="space-x-2">
+              <Button
+                variant="text"
+                color="white"
+                onClick={() => {
+                  setValidationMsg("");
+                  setFileInput(null);
+                  setProcessing(undefined);
+                  setCategoryValue("");
+                  handleOpen();
+                }}
+              >
+                close
+              </Button>
+              <Button
+                variant="gradient"
+                color="white"
+                onClick={() => {
+                  setValidationMsg("");
+                  setFileInput(null);
+                  setProcessing(undefined);
+                  setCategoryValue("");
+                  handleOpen();
+                }}
+              >
+                Ok, Got it
+              </Button>
+            </DialogFooter>
+          </>
+        ) : (
+          <form onSubmit={handleFormSubmit}>
+            {/* Form */}
+            <DialogBody>
+              {/* <Typography className="mb-10 -mt-7 " color="gray" variant="lead">
             Write the message and then click button.
           </Typography> */}
-          <div className="grid gap-3">
-            <Input
-              label="Name"
-              color="cyan"
-              className="text-white"
-              defaultValue={isEdit === true ? product.name : ""}
-            />
-            <Input
-              label="Price"
-              color="cyan"
-              type="number"
-              className="text-white"
-              defaultValue={isEdit === true ? product.price : ""}
-            />
-            <Textarea
-              label="Description"
-              color="cyan"
-              className="text-white"
-              defaultValue={isEdit === true ? product.description : ""}
-            />
-            <Select
-              label="Category"
-              color="cyan"
-              className="text-white"
-              animate={{
-                mount: { y: 0 },
-                unmount: { y: 25 },
-              }}
-              value={isEdit === true ? product.category : ""}
-            >
-              <Option>Clothing</Option>
-              <Option>Elctronics</Option>
-              <Option>Footwear</Option>
-              <Option>Furniture</Option>
-            </Select>
+              <div className="grid gap-3">
+                <Input
+                  label="Name"
+                  name="prodName"
+                  color="cyan"
+                  className="text-white"
+                  defaultValue={isEdit === true ? product.name : ""}
+                />
+                <Input
+                  label="Price"
+                  color="cyan"
+                  name="price"
+                  type="number"
+                  className="text-white"
+                  defaultValue={isEdit === true ? product.price : ""}
+                />
+                <Textarea
+                  label="Description"
+                  name="description"
+                  color="cyan"
+                  className="text-white"
+                  defaultValue={isEdit === true ? product.description : ""}
+                />
+                <Select
+                  label="Category"
+                  name="category"
+                  color="cyan"
+                  className="text-white"
+                  animate={{
+                    mount: { y: 0 },
+                    unmount: { y: 25 },
+                  }}
+                  value={isEdit === true ? product.category : ""}
+                  onChange={(val) => {
+                    setCategoryValue(val);
+                  }}
+                >
+                  <Option value="Clothing">Clothing</Option>
+                  <Option value="Elctronics">Elctronics</Option>
+                  <Option value="Footwear">Footwear</Option>
+                  <Option value="Furniture">Furniture</Option>
+                </Select>
 
-            <label
-              htmlFor="file"
-              className={`flex cursor-pointer ${
-                fileInput !== null ? "lg:text-md text-sm" : "lg:text-lg text-sm"
-              } justify-start gap-2 items-center font-medium text-white`}
-            >
-              {fileInput === null
-                ? isEdit === true
-                  ? product.imageUrl
-                  : "Choose Image"
-                : fileInput.name.toUpperCase() + "(Change Image)"}
+                <label
+                  htmlFor="file"
+                  className={`flex cursor-pointer ${
+                    fileInput !== null
+                      ? "lg:text-md text-xs"
+                      : "lg:text-lg text-xs"
+                  } justify-start gap-2 items-center font-medium text-white`}
+                >
+                  {fileInput === null
+                    ? isEdit === true
+                      ? product.imageUrl
+                      : "Choose Image"
+                    : fileInput.name.toUpperCase() + "(Change Image)"}
 
-              <FaLink size={20} />
-            </label>
-            <input
-              onChange={(e) => setFileInput(e.target.files[0])}
-              className="hidden"
-              id="file"
-              type="file"
-            />
-          </div>
-        </DialogBody>
-        <DialogFooter className="space-x-2">
-          <Button
-            variant="text"
-            color="white"
-            className="flex justify-center items-center gap-1"
-            onClick={() => {
-              setFileInput(null);
-              handleOpen();
-            }}
-          >
-            Cancel <TiCancel size={17} />
-          </Button>
-          <Button
-            variant="gradient"
-            className="flex justify-center items-center gap-1"
-            color="cyan"
-            onClick={handleOpen}
-          >
-            Save <IoIosSave size={17} />
-          </Button>
-        </DialogFooter>
+                  <FaLink size={20} />
+                </label>
+                <input
+                  onChange={(e) => setFileInput(e.target.files[0])}
+                  className="hidden"
+                  name="image"
+                  id="file"
+                  type="file"
+                />
+              </div>
+            </DialogBody>
+            <DialogFooter className="space-x-2">
+              <Button
+                variant="text"
+                color="white"
+                type="button"
+                className="flex justify-center items-center gap-1"
+                onClick={() => {
+                  setValidationMsg("");
+                  setFileInput(null);
+                  handleOpen();
+                }}
+              >
+                Cancel <TiCancel size={17} />
+              </Button>
+              <Button
+                variant="gradient"
+                className="flex justify-center items-center gap-1"
+                color="cyan"
+                type="submit"
+                disabled={processing === true ? true : false}
+              >
+                {processing === true
+                  ? "processing"
+                  : processing === false
+                  ? "Done"
+                  : isEdit === true
+                  ? "Save"
+                  : "Add"}{" "}
+                {isEdit === true ? (
+                  <IoIosSave size={17} />
+                ) : (
+                  <MdAddToPhotos size={17} />
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
       </Dialog>
     </>
   );

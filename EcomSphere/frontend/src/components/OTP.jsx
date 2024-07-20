@@ -44,7 +44,7 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
     } else {
       const loginResData = await login(data.email, data.password, formData.otp);
 
-      console.log(loginResData);
+      // console.log(loginResData);
       if (loginResData.success === true) {
         // Setting up authentication using react auth kit
         signIn({

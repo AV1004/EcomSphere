@@ -6,6 +6,7 @@ require("dotenv").config();
 
 const otpRoutes = require("./routes/otp");
 const authRoutes = require("./routes/auth");
+const shopRoutes = require("./routes/shop");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.get("/", (req, res, next) => {
 
 app.use("/otp", otpRoutes);
 app.use("/auth", authRoutes);
+app.use("/shop", shopRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
