@@ -17,7 +17,9 @@ import { IoIosSave } from "react-icons/io";
 import { MdAddToPhotos, MdSmsFailed } from "react-icons/md";
 import {
   addProduct,
-  getuserProducts,
+  deleteImageFromCloud,
+  getDeleteTokenForCloud,
+  updatedUserProd,
   uploadImageOnClound,
 } from "../https/shop";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
@@ -44,6 +46,24 @@ export default function FormDilog({
 
   const authHeader = useAuthHeader();
 
+  const destroyImage = async (imgId) => {
+    // Getting Delete Token
+    const deleteToken = await getDeleteTokenForCloud(imgId, authHeader);
+
+    let cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    let resourceType = "image";
+    const api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/destroy`;
+    const formData = new FormData();
+    formData.append("public_id", imgId);
+    formData.append("api_key", import.meta.env.VITE_CLOUDINARY_API_KEY);
+    formData.append("signature", deleteToken.signature);
+    formData.append("timestamp", deleteToken.timestamp);
+
+    const resDataOfDestroyImg = await deleteImageFromCloud(api, formData);
+
+    return resDataOfDestroyImg;
+  };
+
   const uploadImage = async (img) => {
     const data = new FormData();
     data.append("file", img);
@@ -57,7 +77,8 @@ export default function FormDilog({
       const resDataOfUpload = await uploadImageOnClound(api, data);
 
       // console.log(resDataOfUpload.secure_url);
-      return resDataOfUpload.secure_url;
+      // console.log(resDataOfUpload);
+      return [resDataOfUpload.secure_url, resDataOfUpload.public_id];
     } catch (err) {
       console.log(err);
     }
@@ -103,8 +124,96 @@ export default function FormDilog({
         setProcessing(false);
       } else {
         // console.log("false image");
-
         setValidationMsg("Please select appropriate file.");
+      }
+    } else {
+      console.log(data);
+      console.log(fileInput);
+      console.log(categoryValue);
+      setProcessing(true);
+      if (fileInput === null && categoryValue === "") {
+        console.log("Change in name,price or description");
+        const resupdateProdData = await updatedUserProd(
+          product._id,
+          data.prodName,
+          data.price,
+          data.description,
+          product.category, //Difference
+          [product.imageUrl.url, product.imageUrl.public_id],
+          authHeader
+        );
+        if (resupdateProdData.success === true) {
+          setMsgAfterSubmission(resupdateProdData.message);
+        } else {
+          setMsgAfterSubmission("Can't edit product due to technical issue!");
+        }
+        setProcessing(false);
+      } else {
+        console.log("Change in image or category!");
+        if (fileInput !== null && categoryValue !== "") {
+          console.log("Change In Both!");
+          const deleteImg = await destroyImage(product.imageUrl.public_id);
+          if (deleteImg.result === "ok") {
+            const imageUrl = await uploadImage(data.image);
+            const resupdateProdData = await updatedUserProd(
+              product._id,
+              data.prodName,
+              data.price,
+              data.description,
+              categoryValue, //Difference
+              imageUrl,
+              authHeader
+            );
+            if (resupdateProdData.success === true) {
+              setMsgAfterSubmission(resupdateProdData.message);
+            } else {
+              setMsgAfterSubmission(
+                "Can't edit product due to technical issue!"
+              );
+            }
+            setProcessing(false);
+          }
+        } else if (categoryValue !== "") {
+          console.log("change in category Value!");
+          const resupdateProdData = await updatedUserProd(
+            product._id,
+            data.prodName,
+            data.price,
+            data.description,
+            categoryValue, //Difference
+            [product.imageUrl.url, product.imageUrl.public_id],
+            authHeader
+          );
+          if (resupdateProdData.success === true) {
+            setMsgAfterSubmission(resupdateProdData.message);
+          } else {
+            setMsgAfterSubmission("Can't edit product due to technical issue!");
+          }
+          setProcessing(false);
+        } else {
+          console.log("change in imageUrl");
+          const deleteImg = await destroyImage(product.imageUrl.public_id);
+          if (deleteImg.result === "ok") {
+            const imageUrl = await uploadImage(data.image);
+            const resupdateProdData = await updatedUserProd(
+              product._id,
+              data.prodName,
+              data.price,
+              data.description,
+              product.category,
+              imageUrl, //Difference
+              authHeader
+            );
+            if (resupdateProdData.success === true) {
+              setMsgAfterSubmission(resupdateProdData.message);
+            } else {
+              setMsgAfterSubmission(
+                "Can't edit product due to technical issue!"
+              );
+            }
+            setProcessing(false);
+          }
+        }
       }
     }
   };
@@ -262,7 +371,7 @@ export default function FormDilog({
                 >
                   {fileInput === null
                     ? isEdit === true
-                      ? product.imageUrl
+                      ? product.imageUrl.url.split("upload/")[1]
                       : "Choose Image"
                     : fileInput.name.toUpperCase() + "(Change Image)"}
 
@@ -285,6 +394,7 @@ export default function FormDilog({
                 className="flex justify-center items-center gap-1"
                 onClick={() => {
                   setValidationMsg("");
+                  setCategoryValue("");
                   setFileInput(null);
                   handleOpen();
                 }}

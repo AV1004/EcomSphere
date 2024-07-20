@@ -128,67 +128,73 @@ export default function UserProds() {
             </div>
           </motion.div>
           <div className="mt-4 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
-            {products.map((product, index) => {
-              return (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1, delay: 1 + index * 0.2 }}
-                  key={index}
-                >
-                  <Card className="w-64 lg:w-64 h-[91%] mb-10">
-                    <CardHeader floated={false} className="">
-                      <img
-                        className="w-96 h-64"
-                        src={product.imageUrl}
-                        alt={product.name}
-                      />
-                    </CardHeader>
-                    <CardBody className="text-center">
-                      <Typography
-                        variant="h4"
-                        color="blue-gray"
-                        className="mb-2"
-                      >
-                        {product.name}
-                      </Typography>
-                      <Typography
-                        color="blue-gray"
-                        className="font-medium"
-                        textGradient
-                      >
-                        {product.category}
-                      </Typography>
-                      <div className="flex items-center justify-center mt-3">
-                        <Typography variant="h3" color="black">
-                          ${product.price}
-                        </Typography>
-                      </div>
-                      <div className="flex gap-2 justify-center items-center mt-3">
-                        <Button color="teal" size="sm" className="flex gap-2">
-                          Delete
-                          <MdDelete size={17} />
-                        </Button>
-                        <Button
-                          color="teal"
-                          className="flex gap-2"
-                          size="sm"
-                          onClick={() => {
-                            setIsEdit(true);
-                            setProductForDilog(product);
-                            setOpenDilog(true);
-                          }}
+            {products.length === 0 ? (
+              <Typography color="white" className="lg:text-3xl text-xl">
+                You did not add any product yet!
+              </Typography>
+            ) : (
+              products.map((product, index) => {
+                return (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                    key={index}
+                  >
+                    <Card className="w-64 lg:w-64 h-[91%] mb-10">
+                      <CardHeader floated={false} className="">
+                        <img
+                          className="w-96 h-64"
+                          src={product.imageUrl.url}
+                          alt={product.name}
+                        />
+                      </CardHeader>
+                      <CardBody className="text-center">
+                        <Typography
+                          variant="h4"
+                          color="blue-gray"
+                          className="mb-2"
                         >
-                          Edit
-                          <FaRegEdit size={17} />
-                        </Button>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                          {product.name}
+                        </Typography>
+                        <Typography
+                          color="blue-gray"
+                          className="font-medium"
+                          textGradient
+                        >
+                          {product.category}
+                        </Typography>
+                        <div className="flex items-center justify-center mt-3">
+                          <Typography variant="h3" color="black">
+                            ${product.price}
+                          </Typography>
+                        </div>
+                        <div className="flex gap-2 justify-center items-center mt-3">
+                          <Button color="teal" size="sm" className="flex gap-2">
+                            Delete
+                            <MdDelete size={17} />
+                          </Button>
+                          <Button
+                            color="teal"
+                            className="flex gap-2"
+                            size="sm"
+                            onClick={() => {
+                              setIsEdit(true);
+                              setProductForDilog(product);
+                              setOpenDilog(true);
+                            }}
+                          >
+                            Edit
+                            <FaRegEdit size={17} />
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </motion.div>
+                );
+              })
+            )}
           </div>
         </section>
       </div>
