@@ -40,7 +40,8 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
             variant="h4"
             className="lg:text-2xl text-lg"
           >
-            Posted by:{product.postedBy}
+            Posted by:
+            {product.user !== undefined ? product.user.name : "Someone"}
           </Typography>
           <Typography color="white" variant="h5" className="lg:text-xl text-md">
             Price:${product.price}
