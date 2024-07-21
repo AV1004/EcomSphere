@@ -219,3 +219,47 @@ exports.addProductToCart = (req, res, next) => {
       next(err);
     });
 };
+
+exports.decreaseQtyOfProd = (req, res, next) => {
+  const { prodId } = req.body;
+
+  User.findById(req.userId)
+    .then((user) => {
+      return user.decreaseFromCart(prodId);
+    })
+    .then((result) => {
+      console.log(result);
+      return res.status(200).json({
+        message: "Product remove by one from cart successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.removeProductFromCart = (req, res, next) => {
+  const { prodId } = req.body;
+
+  User.findById(req.userId)
+    .then((user) => {
+      return user.removeFromCart(prodId);
+    })
+    .then((result) => {
+      console.log(result);
+      return res.status(200).json({
+        message: "Product remove from cart successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};

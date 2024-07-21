@@ -11,7 +11,12 @@ import { IoAdd } from "react-icons/io5";
 import { FaMinus } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-import { getCartItems } from "../https/shop";
+import {
+  addProductToCart,
+  decreaseFromCart,
+  getCartItems,
+  reomveProdFromCart,
+} from "../https/shop";
 
 const TABLE_HEAD = ["Products", "Quantity", "Subtotal"];
 
@@ -44,199 +49,251 @@ const TABLE_HEAD = ["Products", "Quantity", "Subtotal"];
 
 export default function Cart() {
   const [TABLE_ROWS, setTABLE_ROWS] = useState([]);
+  const [changesInItem, setchangesInItem] = useState(false);
+  const [totalCartValue, setTotalCartValue] = useState(0);
+  const [showFallBackText, setShowFallBackText] = useState(false);
   const authHeader = useAuthHeader();
 
   useEffect(() => {
     const getUserCart = async () => {
+      let total = 0;
       const resGetCartData = await getCartItems(authHeader);
       // console.log(resGetCartData.cart.items);
+      if (resGetCartData.cart.items.length === 0) {
+        setShowFallBackText(true);
+      }
       setTABLE_ROWS(resGetCartData.cart.items);
+      resGetCartData.cart.items.map((item) => {
+        total = total + item.productId.price * item.quantity;
+      });
+      setTotalCartValue(total);
+      if (changesInItem === true) {
+        setchangesInItem(false);
+      }
     };
     getUserCart();
-  }, []);
+  }, [changesInItem]);
+
+  const handleAddOneMore = async (prodId) => {
+    const resAddToCartData = await addProductToCart(prodId, authHeader);
+    // console.log(resAddToCartData);
+    if (resAddToCartData.success === true) {
+      setchangesInItem(true);
+    }
+  };
+
+  const handleDecreaseByOne = async (prodId) => {
+    const resDecreaseByOneData = await decreaseFromCart(prodId, authHeader);
+    if (resDecreaseByOneData.success === true) {
+      setchangesInItem(true);
+    }
+  };
+
+  const removeProdCart = async (prodId) => {
+    const resRemoveProdFromCart = await reomveProdFromCart(prodId, authHeader);
+    if (resRemoveProdFromCart.success === true) {
+      setchangesInItem(true);
+    }
+  };
 
   return (
     <div className="fixed inset-0 pointer-events-none">
       <section
         className={`flex w-full h-full flex-col lg:pt-12 pt-16 duration-500 overflow-auto scrollbar-thin scrollbar-webkit`}
       >
-        {/* <div className="mb-4 flex flex-col justify-between gap-8 md:flex-row md:items-center">
-          <div>
-            <Typography variant="h5" color="white">
-              Your Cart
+        {TABLE_ROWS.length === 0 && showFallBackText === true ? (
+          <div className="pointer-events-auto  flex justify-center items-center lg:justify-start lg:items-start">
+            <Typography color="white" className="lg:text-3xl text-2xl">
+              Your cart is empty!
             </Typography>
           </div>
-        </div> */}
-        <div className="pointer-events-auto  flex justify-center items-center lg:justify-start lg:items-start">
-          <Card className="h-full w-full overflow-hidden bg-[#171720] lg:mx-20 ">
-            <CardBody className="px-0 lg:h-[30.9rem] h-[42rem] overflow-auto scrollbar-thin scrollbar-webkit">
-              <table className="w-full min-w-max lg:table-auto table-fixed text-left">
-                <motion.thead
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.3 }}
-                >
-                  <tr>
-                    {TABLE_HEAD.map((head) => (
-                      <th
-                        key={head}
-                        className="border-y border-blue-gray-100 w-1 bg-blue-gray-700 p-4"
-                      >
-                        <Typography
-                          // variant={isMoblie ? "small" : "h5"}
-                          color="white"
-                          className="leading-none opacity-70 lg:text-lg text-sm  font-semibold"
+        ) : (
+          <div className="pointer-events-auto  flex justify-center items-center lg:justify-start lg:items-start">
+            <Card className="h-full w-full overflow-hidden bg-[#171720] lg:mx-20 ">
+              <CardBody className="px-0 lg:h-[30.9rem] h-[42rem] overflow-auto scrollbar-thin scrollbar-webkit">
+                <table className="w-full min-w-max lg:table-auto table-fixed text-left">
+                  <motion.thead
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.3 }}
+                  >
+                    <tr>
+                      {TABLE_HEAD.map((head) => (
+                        <th
+                          key={head}
+                          className="border-y border-blue-gray-100 w-1 bg-blue-gray-700 p-4"
                         >
-                          {head}
-                        </Typography>
-                      </th>
-                    ))}
-                  </tr>
-                </motion.thead>
-                <tbody className="border-0">
-                  {TABLE_ROWS.map(
-                    (
-                      // { img, name, price, total, quantity, category },
-                      item,
-                      index
-                    ) => {
-                      return (
-                        <motion.tr
-                          key={index}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 1, delay: 1 + index * 0.2 }}
-                        >
-                          <td className="p-4">
-                            <div className="flex lg:flex-row flex-col items-center gap-3">
-                              <img
-                                src={item.productId.imageUrl.url}
-                                alt={item.productId.name}
-                                className="lg:h-24 lg:w-24 h-16 w-16"
-                              />
-                              <div className="flex flex-col gap-2 justify-start">
-                                <Typography
-                                  variant="h6"
-                                  color="white"
-                                  className="font-bold flex lg:flex-row flex-col gap-2"
-                                >
-                                  {item.productId.name}
+                          <Typography
+                            // variant={isMoblie ? "small" : "h5"}
+                            color="white"
+                            className="leading-none opacity-70 lg:text-lg text-sm  font-semibold"
+                          >
+                            {head}
+                          </Typography>
+                        </th>
+                      ))}
+                    </tr>
+                  </motion.thead>
+                  <tbody className="border-0">
+                    {TABLE_ROWS.map(
+                      (
+                        // { img, name, price, total, quantity, category },
+                        item,
+                        index
+                      ) => {
+                        return (
+                          <motion.tr
+                            key={index}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 1, delay: 1 + index * 0.2 }}
+                          >
+                            <td className="p-4">
+                              <div className="flex lg:flex-row flex-col items-center gap-3">
+                                <img
+                                  src={item.productId.imageUrl.url}
+                                  alt={item.productId.name}
+                                  className="lg:h-24 lg:w-24 h-16 w-16"
+                                />
+                                <div className="flex flex-col gap-2 justify-start">
                                   <Typography
-                                    variant="small"
+                                    variant="h6"
+                                    color="white"
+                                    className="font-bold flex lg:flex-row flex-col gap-2"
+                                  >
+                                    {item.productId.name}
+                                    <Typography
+                                      variant="small"
+                                      color="white"
+                                      className="font-bold"
+                                    >
+                                      ({item.productId.category})
+                                    </Typography>
+                                  </Typography>
+                                  <Typography
+                                    variant="h6"
                                     color="white"
                                     className="font-bold"
                                   >
-                                    ({item.productId.category})
+                                    Price:${item.productId.price}
                                   </Typography>
-                                </Typography>
-                                <Typography
-                                  variant="h6"
-                                  color="white"
-                                  className="font-bold"
+                                  <button
+                                    className="text-teal-700 w-16 font-semibold"
+                                    onClick={() => {
+                                      removeProdCart(item.productId._id);
+                                    }}
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="p-4">
+                              <div className="flex gap-4">
+                                <button
+                                  className="flex items-center justify-center"
+                                  onClick={() => {
+                                    handleDecreaseByOne(item.productId._id);
+                                  }}
                                 >
-                                  Price:${item.productId.price}
+                                  <FaMinus
+                                    color="white"
+                                    className="cursor-pointer"
+                                    size={13}
+                                  />
+                                </button>
+                                <Typography color="white">
+                                  {item.quantity}
                                 </Typography>
-                                <button className="text-teal-700 w-16 font-semibold">
-                                  Remove
+                                <button
+                                  className="flex items-center justify-center"
+                                  onClick={() => {
+                                    handleAddOneMore(item.productId._id);
+                                  }}
+                                >
+                                  <IoAdd
+                                    color="white"
+                                    className="cursor-pointer "
+                                    size={20}
+                                  />
                                 </button>
                               </div>
-                            </div>
-                          </td>
-                          <td className="p-4">
-                            <div className="flex gap-4">
-                              <button className="flex items-center justify-center">
-                                <FaMinus
-                                  color="white"
-                                  className="cursor-pointer"
-                                  size={13}
-                                />
-                              </button>
-                              <Typography color="white">
-                                {item.quantity}
+                            </td>
+                            <td className="p-4 ">
+                              <Typography
+                                variant="small"
+                                color="white"
+                                className="font-normal"
+                              >
+                                ${item.productId.price * item.quantity}
                               </Typography>
-                              <button className="flex items-center justify-center">
-                                <IoAdd
-                                  color="white"
-                                  className="cursor-pointer "
-                                  size={20}
-                                />
-                              </button>
-                            </div>
-                          </td>
-                          <td className="p-4 ">
-                            <Typography
-                              variant="small"
-                              color="white"
-                              className="font-normal"
-                            >
-                              ${item.productId.price * item.quantity}
-                            </Typography>
-                          </td>
-                        </motion.tr>
-                      );
-                    }
-                  )}
-                </tbody>
-              </table>
-            </CardBody>
-            <CardFooter
-              children
-              className="flex items-end justify-end text-white p-0"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: -50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                transition={{ duration: 1 }}
-                className="border-t lg:w-[30%] w-full  flex flex-col  border-white"
+                            </td>
+                          </motion.tr>
+                        );
+                      }
+                    )}
+                  </tbody>
+                </table>
+              </CardBody>
+              <CardFooter
+                children
+                className="flex items-end justify-end text-white p-0"
               >
-                <Card className="w-full bg-[#171720]">
-                  <CardBody className="flex flex-col gap-4">
-                    <div className="divide-y divide-gray-200">
-                      <div className="flex items-center justify-between last:pb-0">
-                        <div className="flex items-center gap-x-3">
-                          <div>
-                            <Typography color="white" variant="h6">
-                              Items
-                            </Typography>
+                <motion.div
+                  initial={{ opacity: 0, y: -50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 50 }}
+                  transition={{ duration: 1 }}
+                  className="border-t lg:w-[30%] w-full  flex flex-col  border-white"
+                >
+                  <Card className="w-full bg-[#171720]">
+                    <CardBody className="flex flex-col gap-4">
+                      <div className="divide-y divide-gray-200">
+                        <div className="flex items-center justify-between last:pb-0">
+                          <div className="flex items-center gap-x-3">
+                            <div>
+                              <Typography color="white" variant="h6">
+                                Items
+                              </Typography>
+                            </div>
                           </div>
+                          <Typography color="white" variant="h6">
+                            {TABLE_ROWS.length}
+                          </Typography>
                         </div>
-                        <Typography color="white" variant="h6">
-                          4
-                        </Typography>
                       </div>
-                    </div>
-                    <div className="divide-y divide-gray-200">
-                      <div className="flex items-center justify-between last:pb-0">
-                        <div className="flex items-center gap-x-3">
-                          <div>
-                            <Typography color="white" variant="h6">
-                              Total
-                            </Typography>
+                      <div className="divide-y divide-gray-200">
+                        <div className="flex items-center justify-between last:pb-0">
+                          <div className="flex items-center gap-x-3">
+                            <div>
+                              <Typography color="white" variant="h6">
+                                Total
+                              </Typography>
+                            </div>
                           </div>
+                          <Typography color="white" variant="h6">
+                            ${totalCartValue}
+                          </Typography>
                         </div>
-                        <Typography color="white" variant="h6">
-                          $1234
-                        </Typography>
                       </div>
-                    </div>
 
-                    <Button
-                      size="sm"
-                      color="teal"
-                      className="flex justify-center items-center text-md font-light gap-2"
-                    >
-                      Proceed to Checkout
-                      <IoBagCheckOutline size={24} className="mb-2" />
-                    </Button>
-                  </CardBody>
-                </Card>
-              </motion.div>
-            </CardFooter>
-          </Card>
-        </div>
+                      <Button
+                        size="sm"
+                        color="teal"
+                        className="flex justify-center items-center text-md font-light gap-2"
+                      >
+                        Proceed to Checkout
+                        <IoBagCheckOutline size={24} className="mb-2" />
+                      </Button>
+                    </CardBody>
+                  </Card>
+                </motion.div>
+              </CardFooter>
+            </Card>
+          </div>
+        )}
       </section>
     </div>
   );

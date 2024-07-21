@@ -75,6 +75,22 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
+userSchema.methods.decreaseFromCart = function (productId) {
+  const cartProductIndex = this.cart.items.findIndex((item) => {
+    return item.productId.toString() === productId.toString();
+  });
+
+  if (cartProductIndex >= 0) {
+    if (this.cart.items[cartProductIndex].quantity > 1) {
+      this.cart.items[cartProductIndex].quantity -= 1;
+    } else {
+      this.cart.items.splice(cartProductIndex, 1);
+    }
+  }
+
+  return this.save();
+};
+
 userSchema.methods.removeFromCart = function (productId) {
   const updatedCartItems = this.cart.items.filter((item) => {
     return item.productId.toString() !== productId.toString();

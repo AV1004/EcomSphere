@@ -168,3 +168,35 @@ export const getCartItems = async (authHeader) => {
 
   return resData;
 };
+
+// Decrease Product quantity from cart
+export const decreaseFromCart = async (prodId, authHeader) => {
+  const res = await fetch(server + "/shop/decreaseQtyOfProd", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ prodId: prodId }),
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
+
+// Remove Product quantity from cart
+export const reomveProdFromCart = async (prodId, authHeader) => {
+  const res = await fetch(server + "/shop/removeProdFromTheCart", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ prodId: prodId }),
+  });
+
+  const resData = res.json();
+
+  return resData;
+};

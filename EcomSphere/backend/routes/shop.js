@@ -26,4 +26,8 @@ router.get("/getCartItems", isAuth, shopController.getCartItems);
 
 router.post("/addToCart", isAuth, shopController.addProductToCart);
 
+router.post("/decreaseQtyOfProd", isAuth, shopController.decreaseQtyOfProd);
+
+router.post("/removeProdFromTheCart", isAuth, shopController.removeProductFromCart);
+
 module.exports = router;
