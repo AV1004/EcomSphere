@@ -127,12 +127,12 @@ export default function FormDilog({
         setValidationMsg("Please select appropriate file.");
       }
     } else {
-      console.log(data);
-      console.log(fileInput);
-      console.log(categoryValue);
+      // console.log(data);
+      // console.log(fileInput);
+      // console.log(categoryValue);
       setProcessing(true);
       if (fileInput === null && categoryValue === "") {
-        console.log("Change in name,price or description");
+        // console.log("Change in name,price or description");
         const resupdateProdData = await updatedUserProd(
           product._id,
           data.prodName,
@@ -149,9 +149,9 @@ export default function FormDilog({
         }
         setProcessing(false);
       } else {
-        console.log("Change in image or category!");
+        // console.log("Change in image or category!");
         if (fileInput !== null && categoryValue !== "") {
-          console.log("Change In Both!");
+          // console.log("Change In Both!");
           const deleteImg = await destroyImage(product.imageUrl.public_id);
           if (deleteImg.result === "ok") {
             const imageUrl = await uploadImage(data.image);
@@ -174,7 +174,7 @@ export default function FormDilog({
             setProcessing(false);
           }
         } else if (categoryValue !== "") {
-          console.log("change in category Value!");
+          // console.log("change in category Value!");
           const resupdateProdData = await updatedUserProd(
             product._id,
             data.prodName,
@@ -191,7 +191,7 @@ export default function FormDilog({
           }
           setProcessing(false);
         } else {
-          console.log("change in imageUrl");
+          // console.log("change in imageUrl");
           const deleteImg = await destroyImage(product.imageUrl.public_id);
           if (deleteImg.result === "ok") {
             const imageUrl = await uploadImage(data.image);

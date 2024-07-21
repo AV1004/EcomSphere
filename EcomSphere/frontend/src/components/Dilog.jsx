@@ -9,9 +9,23 @@ import {
 } from "@material-tailwind/react";
 import { FaCartArrowDown } from "react-icons/fa";
 import { MdCloseFullscreen } from "react-icons/md";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { addProductToCart } from "../https/shop";
+import { useNavigate } from "react-router-dom";
 
 export const Dilog = ({ openDilog, setOpenDilog, product }) => {
-  // console.log(product);
+  const authHeader = useAuthHeader();
+  const navigate = useNavigate();
+
+  const handleAddToCart = async (prodId) => {
+    const resAddToCartData = await addProductToCart(prodId, authHeader);
+    // console.log(resAddToCartData);
+    if (resAddToCartData.success === true) {
+      handleOpen();
+      navigate("/cart");
+    }
+  };
+
   const handleOpen = () => setOpenDilog(!openDilog);
   return (
     <>
@@ -66,7 +80,14 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
           >
             close <MdCloseFullscreen size={16} />
           </Button>
-          <Button color="teal" variant="gradient" className="flex gap-2">
+          <Button
+            color="teal"
+            variant="gradient"
+            className="flex gap-2"
+            onClick={() => {
+              handleAddToCart(product._id);
+            }}
+          >
             Add to Cart <FaCartArrowDown size={15} />
           </Button>
         </DialogFooter>

@@ -180,3 +180,30 @@ exports.deleteProduct = (req, res, next) => {
       next(err);
     });
 };
+
+exports.addProductToCart = (req, res, next) => {
+  const { prodId } = req.body;
+
+  let loadedUser;
+  User.findById(req.userId)
+    .then((user) => {
+      loadedUser = user;
+      return Product.findById(prodId);
+    })
+    .then((product) => {
+      return loadedUser.addToCart(product);
+    })
+    .then((result) => {
+      console.log(result);
+      return res.status(200).json({
+        message: "Product add to cart successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};

@@ -14,75 +14,9 @@ import { Dilog } from "./Dilog";
 import { BiDetail } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { getAllProducts } from "../https/shop";
+import { addProductToCart, getAllProducts } from "../https/shop";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
-
-// const products = [
-//   {
-//     name: "Men's T-Shirt",
-//     imageUrl: "https://example.com/mens-tshirt.jpg",
-//     price: 19.99,
-//     description: "A comfortable cotton t-shirt.",
-//     category: "Clothing",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Men's Jeans",
-//     imageUrl: "https://example.com/mens-jeans.jpg",
-//     price: 49.99,
-//     description: "Stylish and durable denim jeans.",
-//     category: "Elctronics",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Women's Dress",
-//     imageUrl: "https://example.com/womens-dress.jpg",
-//     price: 39.99,
-//     description: "A beautiful summer dress.",
-//     category: "Footwear",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Women's Top",
-//     imageUrl: "https://example.com/womens-top.jpg",
-//     price: 29.99,
-//     description: "A stylish top for all occasions.",
-//     category: "Clothing",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Smartphone XYZ",
-//     imageUrl: "https://example.com/smartphone.jpg",
-//     price: 599.99,
-//     description: "A latest model smartphone with high-end features.",
-//     category: "Footwear",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Smartphone ABC",
-//     imageUrl: "https://example.com/smartphone2.jpg",
-//     price: 499.99,
-//     description: "An affordable smartphone with all the essential features.",
-//     category: "Furniture",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Laptop Pro",
-//     imageUrl: "https://example.com/laptop.jpg",
-//     price: 999.99,
-//     description: "A powerful laptop for professionals.",
-//     category: "Footwear",
-//     postedBy: "Valay Andhariya",
-//   },
-//   {
-//     name: "Laptop Air",
-//     imageUrl: "https://example.com/laptop2.jpg",
-//     price: 799.99,
-//     description: "A lightweight and portable laptop.",
-//     category: "Furniture",
-//     postedBy: "Valay Andhariya",
-//   },
-// ];
+import { useNavigate } from "react-router-dom";
 
 export default function ProductsPage() {
   const [openDilog, setOpenDilog] = useState(false);
@@ -92,6 +26,9 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
 
   const authHeader = useAuthHeader();
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getProds = async () => {
       const resAllProdsData = await getAllProducts(authHeader);
@@ -103,6 +40,14 @@ export default function ProductsPage() {
     };
     getProds();
   }, []);
+
+  const handleAddToCart = async (prodId) => {
+    const resAddToCartData = await addProductToCart(prodId, authHeader);
+    // console.log(resAddToCartData);
+    if (resAddToCartData.success === true) {
+      navigate("/cart");
+    }
+  };
 
   return (
     <>
@@ -277,7 +222,13 @@ export default function ProductsPage() {
                             Details
                             <BiDetail size={17} />
                           </Button>
-                          <Button color="teal" className="flex gap-2">
+                          <Button
+                            color="teal"
+                            className="flex gap-2"
+                            onClick={() => {
+                              handleAddToCart(product._id);
+                            }}
+                          >
                             Add to Cart <FaCartArrowDown size={17} />
                           </Button>
                         </div>
@@ -318,14 +269,14 @@ export default function ProductsPage() {
                               className="font-medium"
                               textGradient
                             >
-                              {product.postedBy}
+                              {product.user.name}
                             </Typography>
                             <div className="flex items-center justify-center mt-3">
                               <Typography variant="h3" color="black">
                                 ${product.price}
                               </Typography>
                             </div>
-                            <div className="flex gap-2 justify-center items-center mt-3">
+                            <div className="flex lg:flex-row flex-col gap-2 justify-center items-center  mt-3">
                               <Button
                                 color="teal"
                                 onClick={() => {
@@ -337,7 +288,13 @@ export default function ProductsPage() {
                                 Details
                                 <BiDetail size={17} />
                               </Button>
-                              <Button color="teal" className="flex gap-2">
+                              <Button
+                                color="teal"
+                                className="flex gap-2"
+                                onClick={() => {
+                                  handleAddToCart(product._id);
+                                }}
+                              >
                                 Add to Cart <FaCartArrowDown size={17} />
                               </Button>
                             </div>

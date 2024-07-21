@@ -139,3 +139,19 @@ export const getAllProducts = async (authHeader) => {
 
   return resData;
 };
+
+// Add Product to cart
+export const addProductToCart = async (prodId, authHeader) => {
+  const res = await fetch(server + "/shop/addToCart", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ prodId: prodId }),
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
