@@ -181,6 +181,18 @@ exports.deleteProduct = (req, res, next) => {
     });
 };
 
+exports.getCartItems = (req, res, next) => {
+  User.findById(req.userId)
+    .populate("cart.items.productId")
+    .then((user) => {
+      return res.status(200).json({
+        cart: user.cart,
+        message: "Cart items fetched successfully!",
+        success: true,
+      });
+    });
+};
+
 exports.addProductToCart = (req, res, next) => {
   const { prodId } = req.body;
 

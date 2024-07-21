@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -10,37 +10,51 @@ import { IoBagCheckOutline } from "react-icons/io5";
 import { IoAdd } from "react-icons/io5";
 import { FaMinus } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import { getCartItems } from "../https/shop";
 
 const TABLE_HEAD = ["Products", "Quantity", "Subtotal"];
 
-const TABLE_ROWS = [
-  {
-    img: "https://docs.material-tailwind.com/img/team-3.jpg",
-    name: "Spotify",
-    category: "Furniture",
-    price: 123,
-    total: 2500,
-    quantity: 2,
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/team-3.jpg",
-    name: "Spotify",
-    category: "Footwear",
-    price: 123,
-    total: 2500,
-    quantity: 1,
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/team-3.jpg",
-    name: "Spotify",
-    category: "Clothing",
-    price: 123,
-    total: 2500,
-    quantity: 5,
-  },
-];
+// const TABLE_ROWS = [
+//   {
+//     img: "https://docs.material-tailwind.com/img/team-3.jpg",
+//     name: "Spotify",
+//     category: "Furniture",
+//     price: 123,
+//     total: 2500,
+//     quantity: 2,
+//   },
+//   {
+//     img: "https://docs.material-tailwind.com/img/team-3.jpg",
+//     name: "Spotify",
+//     category: "Footwear",
+//     price: 123,
+//     total: 2500,
+//     quantity: 1,
+//   },
+//   {
+//     img: "https://docs.material-tailwind.com/img/team-3.jpg",
+//     name: "Spotify",
+//     category: "Clothing",
+//     price: 123,
+//     total: 2500,
+//     quantity: 5,
+//   },
+// ];
 
 export default function Cart() {
+  const [TABLE_ROWS, setTABLE_ROWS] = useState([]);
+  const authHeader = useAuthHeader();
+
+  useEffect(() => {
+    const getUserCart = async () => {
+      const resGetCartData = await getCartItems(authHeader);
+      // console.log(resGetCartData.cart.items);
+      setTABLE_ROWS(resGetCartData.cart.items);
+    };
+    getUserCart();
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none">
       <section
@@ -83,7 +97,8 @@ export default function Cart() {
                 <tbody className="border-0">
                   {TABLE_ROWS.map(
                     (
-                      { img, name, price, total, quantity, category },
+                      // { img, name, price, total, quantity, category },
+                      item,
                       index
                     ) => {
                       return (
@@ -97,8 +112,8 @@ export default function Cart() {
                           <td className="p-4">
                             <div className="flex lg:flex-row flex-col items-center gap-3">
                               <img
-                                src={img}
-                                alt={name}
+                                src={item.productId.imageUrl.url}
+                                alt={item.productId.name}
                                 className="lg:h-24 lg:w-24 h-16 w-16"
                               />
                               <div className="flex flex-col gap-2 justify-start">
@@ -107,13 +122,13 @@ export default function Cart() {
                                   color="white"
                                   className="font-bold flex lg:flex-row flex-col gap-2"
                                 >
-                                  {name}
+                                  {item.productId.name}
                                   <Typography
                                     variant="small"
                                     color="white"
                                     className="font-bold"
                                   >
-                                    ({category})
+                                    ({item.productId.category})
                                   </Typography>
                                 </Typography>
                                 <Typography
@@ -121,7 +136,7 @@ export default function Cart() {
                                   color="white"
                                   className="font-bold"
                                 >
-                                  Price:${price}
+                                  Price:${item.productId.price}
                                 </Typography>
                                 <button className="text-teal-700 w-16 font-semibold">
                                   Remove
@@ -138,7 +153,9 @@ export default function Cart() {
                                   size={13}
                                 />
                               </button>
-                              <Typography color="white">{quantity}</Typography>
+                              <Typography color="white">
+                                {item.quantity}
+                              </Typography>
                               <button className="flex items-center justify-center">
                                 <IoAdd
                                   color="white"
@@ -154,7 +171,7 @@ export default function Cart() {
                               color="white"
                               className="font-normal"
                             >
-                              ${total}
+                              ${item.productId.price * item.quantity}
                             </Typography>
                           </td>
                         </motion.tr>

@@ -155,3 +155,16 @@ export const addProductToCart = async (prodId, authHeader) => {
 
   return resData;
 };
+
+// Get Cart Items
+export const getCartItems = async (authHeader) => {
+  const res = await fetch(server + "/shop/getCartItems", {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
