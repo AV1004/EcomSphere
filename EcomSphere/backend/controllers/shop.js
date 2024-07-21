@@ -20,6 +20,24 @@ exports.generateDeleteTokenForCloudinary = (req, res, next) => {
   });
 };
 
+exports.getAllProducts = (req, res, next) => {
+  Product.find()
+    .populate("user")
+    .then((prods) => {
+      return res.status(200).json({
+        message: "Products fetched successfully!",
+        products: prods,
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
 exports.getUserProducts = (req, res, next) => {
   User.findById(req.userId)
     .populate("products")

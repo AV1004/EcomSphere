@@ -11,6 +11,7 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { MdCloseFullscreen } from "react-icons/md";
 
 export const Dilog = ({ openDilog, setOpenDilog, product }) => {
+  // console.log(product);
   const handleOpen = () => setOpenDilog(!openDilog);
   return (
     <>
@@ -21,14 +22,18 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
       >
         <DialogHeader>
           <Typography variant="h5" color="teal">
-            {product.name}
+            {product.name !== undefined ? product.name : "Product Name"}
           </Typography>
         </DialogHeader>
         <DialogBody divider className="grid place-items-center gap-4 ">
           <img
-            className="lg:h-56"
-            src="https://docs.material-tailwind.com/img/team-3.jpg"
-            alt="profile-picture"
+            className="lg:h-56  max-h-72"
+            src={
+              product.imageUrl !== undefined
+                ? product.imageUrl.url
+                : "https://docs.material-tailwind.com/img/team-3.jpg"
+            }
+            alt={product.name}
           />
           <Typography
             color="white"
@@ -41,10 +46,14 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
             Price:${product.price}
           </Typography>
           <Typography color="white" variant="h6">
-            {product.category}
+            {product.category !== undefined
+              ? product.category
+              : "Prod Category"}
           </Typography>
           <Typography color="teal" className="text-center font-normal">
-            {product.description}
+            {product.description !== undefined
+              ? product.description
+              : "Prod Description"}
           </Typography>
         </DialogBody>
         <DialogFooter className="space-x-2">

@@ -12,6 +12,8 @@ router.get(
   shopController.generateDeleteTokenForCloudinary
 );
 
+router.get("/getProds", isAuth, shopController.getAllProducts);
+
 router.get("/userProds", isAuth, shopController.getUserProducts);
 
 router.post("/addProd", isAuth, shopController.addProduct);

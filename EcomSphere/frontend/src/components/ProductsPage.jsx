@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -14,78 +14,95 @@ import { Dilog } from "./Dilog";
 import { BiDetail } from "react-icons/bi";
 import { FaCartArrowDown } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { getAllProducts } from "../https/shop";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
-const products = [
-  {
-    name: "Men's T-Shirt",
-    imageUrl: "https://example.com/mens-tshirt.jpg",
-    price: 19.99,
-    description: "A comfortable cotton t-shirt.",
-    category: "Clothing",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Men's Jeans",
-    imageUrl: "https://example.com/mens-jeans.jpg",
-    price: 49.99,
-    description: "Stylish and durable denim jeans.",
-    category: "Elctronics",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Women's Dress",
-    imageUrl: "https://example.com/womens-dress.jpg",
-    price: 39.99,
-    description: "A beautiful summer dress.",
-    category: "Footwear",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Women's Top",
-    imageUrl: "https://example.com/womens-top.jpg",
-    price: 29.99,
-    description: "A stylish top for all occasions.",
-    category: "Clothing",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Smartphone XYZ",
-    imageUrl: "https://example.com/smartphone.jpg",
-    price: 599.99,
-    description: "A latest model smartphone with high-end features.",
-    category: "Footwear",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Smartphone ABC",
-    imageUrl: "https://example.com/smartphone2.jpg",
-    price: 499.99,
-    description: "An affordable smartphone with all the essential features.",
-    category: "Furniture",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Laptop Pro",
-    imageUrl: "https://example.com/laptop.jpg",
-    price: 999.99,
-    description: "A powerful laptop for professionals.",
-    category: "Footwear",
-    postedBy: "Valay Andhariya",
-  },
-  {
-    name: "Laptop Air",
-    imageUrl: "https://example.com/laptop2.jpg",
-    price: 799.99,
-    description: "A lightweight and portable laptop.",
-    category: "Furniture",
-    postedBy: "Valay Andhariya",
-  },
-];
+// const products = [
+//   {
+//     name: "Men's T-Shirt",
+//     imageUrl: "https://example.com/mens-tshirt.jpg",
+//     price: 19.99,
+//     description: "A comfortable cotton t-shirt.",
+//     category: "Clothing",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Men's Jeans",
+//     imageUrl: "https://example.com/mens-jeans.jpg",
+//     price: 49.99,
+//     description: "Stylish and durable denim jeans.",
+//     category: "Elctronics",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Women's Dress",
+//     imageUrl: "https://example.com/womens-dress.jpg",
+//     price: 39.99,
+//     description: "A beautiful summer dress.",
+//     category: "Footwear",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Women's Top",
+//     imageUrl: "https://example.com/womens-top.jpg",
+//     price: 29.99,
+//     description: "A stylish top for all occasions.",
+//     category: "Clothing",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Smartphone XYZ",
+//     imageUrl: "https://example.com/smartphone.jpg",
+//     price: 599.99,
+//     description: "A latest model smartphone with high-end features.",
+//     category: "Footwear",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Smartphone ABC",
+//     imageUrl: "https://example.com/smartphone2.jpg",
+//     price: 499.99,
+//     description: "An affordable smartphone with all the essential features.",
+//     category: "Furniture",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Laptop Pro",
+//     imageUrl: "https://example.com/laptop.jpg",
+//     price: 999.99,
+//     description: "A powerful laptop for professionals.",
+//     category: "Footwear",
+//     postedBy: "Valay Andhariya",
+//   },
+//   {
+//     name: "Laptop Air",
+//     imageUrl: "https://example.com/laptop2.jpg",
+//     price: 799.99,
+//     description: "A lightweight and portable laptop.",
+//     category: "Furniture",
+//     postedBy: "Valay Andhariya",
+//   },
+// ];
 
 export default function ProductsPage() {
   const [openDilog, setOpenDilog] = useState(false);
-  const [productForDilog, setProductForDilog] = useState(products[0]);
+  const [productForDilog, setProductForDilog] = useState({});
   const [whatToSee, setWhatToSee] = useState("All Products");
+
+  const [products, setProducts] = useState([]);
+
+  const authHeader = useAuthHeader();
+  useEffect(() => {
+    const getProds = async () => {
+      const resAllProdsData = await getAllProducts(authHeader);
+      // console.log(resAllProdsData);
+      if (resAllProdsData.success === true) {
+        setProducts(resAllProdsData.products);
+        setProductForDilog(resAllProdsData.products[0]);
+      }
+    };
+    getProds();
+  }, []);
 
   return (
     <>
@@ -216,8 +233,9 @@ export default function ProductsPage() {
                     <Card className="w-80 lg:w-96 mb-10">
                       <CardHeader floated={false} className="lg:h-80 ">
                         <img
-                          src="https://docs.material-tailwind.com/img/team-3.jpg"
-                          alt="profile-picture"
+                          className="h-80 w-96"
+                          src={product.imageUrl.url}
+                          alt={product.name}
                         />
                       </CardHeader>
                       <CardBody className="text-center">
@@ -233,7 +251,7 @@ export default function ProductsPage() {
                           className="font-medium"
                           textGradient
                         >
-                          {product.postedBy}
+                          {product.user.name}
                         </Typography>
                         <Typography
                           color="blue-gray"
@@ -282,8 +300,9 @@ export default function ProductsPage() {
                         <Card className="w-80 lg:w-96 mb-10">
                           <CardHeader floated={false} className="lg:h-80 ">
                             <img
-                              src="https://docs.material-tailwind.com/img/team-3.jpg"
-                              alt="profile-picture"
+                              className="h-80 w-96"
+                              src={product.imageUrl.url}
+                              alt={product.name}
                             />
                           </CardHeader>
                           <CardBody className="text-center">

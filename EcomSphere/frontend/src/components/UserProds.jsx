@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -91,6 +91,7 @@ export default function UserProds() {
   const [openDilog, setOpenDilog] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [productForDilog, setProductForDilog] = useState(products[0]);
+  const [showFallBackText, setShowFallBackText] = useState(false);
   const authHeader = useAuthHeader();
 
   const [openDilogMessage, setOpenDilogMessage] = useState(false);
@@ -118,6 +119,7 @@ export default function UserProds() {
     const giveUserProds = async () => {
       const userProdData = await getuserProducts(authHeader);
       setProducts(userProdData.products);
+      setShowFallBackText(true);
     };
     giveUserProds();
   }, [openDilog, openDilogMessage]);
@@ -179,8 +181,9 @@ export default function UserProds() {
               </Button>
             </div>
           </motion.div>
+
           <div className="mt-4 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
-            {products.length === 0 ? (
+            {products.length === 0 && showFallBackText === true ? (
               <Typography color="white" className="lg:text-3xl text-xl">
                 You did not add any product yet!
               </Typography>

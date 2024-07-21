@@ -126,3 +126,16 @@ export const deleteProduct = async (prodId, authHeader) => {
 
   return resData;
 };
+
+// Get All Products
+export const getAllProducts = async (authHeader) => {
+  const res = await fetch(server + "/shop/getProds", {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
