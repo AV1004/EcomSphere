@@ -14,6 +14,7 @@ import UserProds from "./components/UserProds";
 import { MyOrders } from "./components/MyOrders";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
+import AfterCheckout from "./components/AfterCheckout";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -50,6 +51,17 @@ function App() {
         </Route>
         <Route element={<AuthOutlet fallbackPath="/signin" />}>
           <Route path="/profile" element={<ProfilePage />} />
+        </Route>
+
+        <Route element={<AuthOutlet fallbackPath="/signin" />}>
+          <Route
+            path="/checkout/success"
+            element={<AfterCheckout success={true} />}
+          />
+          <Route
+            path="/checkout/fail"
+            element={<AfterCheckout success={false} />}
+          />
         </Route>
       </Routes>
       <Cursor />

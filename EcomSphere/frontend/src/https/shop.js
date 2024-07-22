@@ -200,3 +200,59 @@ export const reomveProdFromCart = async (prodId, authHeader) => {
 
   return resData;
 };
+
+// Fetch User for profile
+export const fetchUser = async (authHeader) => {
+  const res = await fetch(server + "/shop/fetchUserDetails", {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
+
+// Add Mobile of user
+export const updateMobileAndName = async (mobile, name, authHeader) => {
+  const res = await fetch(server + "/shop/updateUserMobileAndName", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ mobile: mobile, name: name }),
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
+
+export const changeAddress = async (address, authHeader) => {
+  const res = await fetch(server + "/shop/updateAddress", {
+    method: "POST",
+    headers: {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ address: address }),
+  });
+
+  const resData = res.json();
+
+  return resData;
+};
+
+export const clearCartAndCreateOrder = async (authHeader) => {
+  const res = await fetch(server + "/shop/clearCartAndMadeOrder", {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  const resData = res.json();
+
+  return resData;
+};

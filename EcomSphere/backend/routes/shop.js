@@ -5,6 +5,8 @@ const isAuth = require("../middleware/is-auth");
 
 const router = express.Router();
 
+router.get("/fetchUserDetails", isAuth, shopController.giveUserDataToFrontend);
+
 // Delete token for Cloudinary
 router.get(
   "/generate-delete-token",
@@ -28,6 +30,29 @@ router.post("/addToCart", isAuth, shopController.addProductToCart);
 
 router.post("/decreaseQtyOfProd", isAuth, shopController.decreaseQtyOfProd);
 
-router.post("/removeProdFromTheCart", isAuth, shopController.removeProductFromCart);
+router.post(
+  "/removeProdFromTheCart",
+  isAuth,
+  shopController.removeProductFromCart
+);
 
+router.post(
+  "/create-checkout-session",
+  isAuth,
+  shopController.goTOCheckoutStripe
+);
+
+router.post(
+  "/updateUserMobileAndName",
+  isAuth,
+  shopController.completeProfileMobile
+);
+
+router.post("/updateAddress", isAuth, shopController.changeAddress);
+
+router.get(
+  "/clearCartAndMadeOrder",
+  isAuth,
+  shopController.clearCartAndCreateOrder
+);
 module.exports = router;

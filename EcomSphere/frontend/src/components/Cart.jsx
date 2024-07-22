@@ -20,6 +20,8 @@ import {
 
 import emptyCart from "/images/emptyCart.png";
 import { Link } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import { server } from "../https/auth";
 
 const TABLE_HEAD = ["Products", "Quantity", "Subtotal"];
 
@@ -96,6 +98,36 @@ export default function Cart() {
     const resRemoveProdFromCart = await reomveProdFromCart(prodId, authHeader);
     if (resRemoveProdFromCart.success === true) {
       setchangesInItem(true);
+    }
+  };
+
+  const makePayment = async () => {
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
+    // console.log(TABLE_ROWS);
+    const body = {
+      products: TABLE_ROWS,
+    };
+
+    const headers = {
+      Authorization: authHeader,
+      "Content-type": "application/json",
+    };
+
+    const response = await fetch(`${server}/shop/create-checkout-session`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
+
+    const session = await response.json();
+
+    const result = stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+    
+    if (result.error) {
+      console.log(result.error);
     }
   };
 
@@ -304,6 +336,7 @@ export default function Cart() {
                           size="sm"
                           color="teal"
                           className="flex justify-center items-center text-md font-light gap-2"
+                          onClick={makePayment}
                         >
                           Proceed to Checkout
                           <IoBagCheckOutline size={24} className="mb-2" />

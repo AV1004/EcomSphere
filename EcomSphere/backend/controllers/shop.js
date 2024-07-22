@@ -2,6 +2,33 @@ const crypto = require("crypto");
 
 const Product = require("../models/product");
 const User = require("../models/user");
+const Order = require("../models/order");
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
+// Fetch User Data
+exports.giveUserDataToFrontend = (req, res, next) => {
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("Could not find user!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      return res.status(200).json({
+        user: user,
+        message: "User fetched successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
 
 // Generating Delete token for cloudinary
 exports.generateDeleteTokenForCloudinary = (req, res, next) => {
@@ -253,6 +280,142 @@ exports.removeProductFromCart = (req, res, next) => {
       console.log(result);
       return res.status(200).json({
         message: "Product remove from cart successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.goTOCheckoutStripe = async (req, res, next) => {
+  const { products } = req.body;
+
+  const lineItems = products.map((product) => ({
+    price_data: {
+      currency: "INR",
+      unit_amount: product.productId.price * 100,
+      product_data: {
+        name: product.productId.name,
+        description: product.productId.description,
+        images: [product.productId.imageUrl.url],
+      },
+    },
+    quantity: product.quantity,
+  }));
+
+  try {
+    const loadedUser = await User.findById(req.userId);
+    // Create a customer
+    const customer = await stripe.customers.create({
+      name: loadedUser.name,
+      address: {
+        line1: loadedUser.address.line1,
+        line2: loadedUser.address.line2,
+        city: loadedUser.address.city,
+        state: loadedUser.address.state,
+        postal_code: loadedUser.address.postalCode,
+        country: loadedUser.address.country,
+      },
+      email: loadedUser.email, // Replace with a real email
+    });
+
+    // Create a checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: lineItems,
+      success_url: "http://localhost:5173/checkout/success",
+      cancel_url: "http://localhost:5173/checkout/fail",
+      customer: customer.id, // Use the created customer's ID
+    });
+
+    res.json({
+      id: session.id,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.completeProfileMobile = (req, res, next) => {
+  const { mobile, name } = req.body;
+
+  User.findById(req.userId)
+    .then((user) => {
+      user.name = name;
+      user.mobile = mobile;
+      return user.save();
+    })
+    .then((result) => {
+      return res.json({
+        message: "User updated successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.changeAddress = (req, res, next) => {
+  const { address } = req.body;
+
+  User.findById(req.userId)
+    .then((user) => {
+      user.address = address;
+      return user.save();
+    })
+    .then((result) => {
+      return res.json({
+        message: "Address updated successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.clearCartAndCreateOrder = (req, res, next) => {
+  User.findById(req.userId)
+    .populate("cart.items.productId")
+    .then((user) => {
+      const products = user.cart.items.map((item) => {
+        return {
+          product: item.productId,
+          quantity: item.quantity,
+          subtotal: item.productId.price * item.quantity,
+        };
+      });
+      let total = 0;
+      for (let i = 0; i < products.length; i++) {
+        total = total + products[i].subtotal;
+      }
+      const order = new Order();
+      order.user = user._id;
+      order.orderItems = products;
+      order.total = total;
+      return order.save().then((result) => {
+        user.orders.push(order);
+        return user.save().then(() => {
+          return user.clearCart();
+        });
+      });
+    })
+    .then((result) => {
+      return res.status(200).json({
+        message: "Cart cleared and order created successfully!",
         success: true,
       });
     })

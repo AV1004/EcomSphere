@@ -76,7 +76,7 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
       openDilog === false &&
       data.isLogin === true
     ) {
-      navigate("/");
+      navigate("/profile");
     }
   }, [isVerify, openDilog]);
 

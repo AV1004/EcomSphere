@@ -38,9 +38,8 @@ const userSchema = new Schema(
     mobile: {
       type: Number,
     },
-    addresses: {
-      address_first: String,
-      address_second: String,
+    address: {
+      type: Object,
     },
     products: [
       {

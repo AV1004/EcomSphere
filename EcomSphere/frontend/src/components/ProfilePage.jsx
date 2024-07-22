@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   Button,
@@ -25,6 +25,9 @@ import { CiLogout } from "react-icons/ci";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { motion } from "framer-motion";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { changeAddress, fetchUser, updateMobileAndName } from "../https/shop";
+import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
+import MessageDilog from "./MessageDilog";
 
 // Dummy Orders Table Data
 const TABLE_HEAD = ["Id", "Status", "Order Date", "Total", ""];
@@ -62,8 +65,11 @@ const TABLE_ROWS = [
   },
 ];
 
-export const ProfilePage = ({ setIsAuthenticated }) => {
+export const ProfilePage = () => {
   const isMoblie = window.innerWidth < 768;
+  const [validationMessage, setValidationMessage] = useState("");
+  const [showDilog, setShowDilog] = useState(false);
+  const [changesInValues, setChangesInValues] = useState(false);
   const [open, setOpen] = useState(false);
   const openDrawer = () => setOpen(true);
   const closeDrawer = () => setOpen(false);
@@ -71,10 +77,98 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
 
   const signOut = useSignOut();
 
+  const authHeader = useAuthHeader();
+
   const [showContent, setShowContent] = useState("accountSettings");
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const resUserData = await fetchUser(authHeader);
+      // console.log(resUserData.user);
+      setUserInfo(resUserData.user);
+    };
+    fetchUserData();
+    if (userInfo.address === undefined && userInfo.mobile === undefined) {
+      setValidationMessage("Please complete your profile first!");
+    }
+    if (userInfo.address !== undefined && userInfo.mobile !== undefined) {
+      setValidationMessage("");
+    }
+  }, [validationMessage, changesInValues]);
+
+  const handleHomePageClick = () => {
+    if (
+      validationMessage === "" ||
+      (userInfo.address !== undefined && userInfo.mobile !== undefined)
+    ) {
+      navigate("/");
+    } else {
+      setShowDilog(true);
+    }
+  };
+
+  const handleAddMobile = async (event) => {
+    event.preventDefault();
+
+    const fd = new FormData(event.target);
+    const data = Object.fromEntries(fd.entries());
+
+    if (data.mobile.length !== 0 && data.name.length !== 0) {
+      const resUpdateMobileData = await updateMobileAndName(
+        data.mobile,
+        data.name,
+        authHeader
+      );
+      // console.log(resUpdateMobileData);
+      if (resUpdateMobileData.success === true) {
+        setChangesInValues(!changesInValues);
+      }
+    }
+  };
+
+  const handleAddressSubmit = async (event) => {
+    event.preventDefault();
+
+    const fd = new FormData(event.target);
+    const data = Object.fromEntries(fd.entries());
+
+    if (
+      data.line1.length !== 0 &&
+      data.line2.length !== 0 &&
+      data.city.length !== 0 &&
+      data.state.length !== 0 &&
+      data.postalCode.length !== 0 &&
+      data.country.length !== 0
+    ) {
+      const address = {
+        line1: data.line1,
+        line2: data.line2,
+        city: data.city,
+        state: data.state,
+        postalCode: data.postalCode,
+        country: data.country,
+      };
+
+      const resAddressData = await changeAddress(address, authHeader);
+      if (resAddressData.success === true) {
+        setChangesInValues(!changesInValues);
+      }
+    }
+  };
 
   return (
     <>
+      {validationMessage !== "" ? (
+        <MessageDilog
+          openDilog={showDilog}
+          setOpenDilog={setShowDilog}
+          validationMessage={validationMessage}
+          color={"black"}
+        />
+      ) : (
+        ""
+      )}
       {isMoblie ? (
         <Button className="m-3" color="blue-gray" onClick={openDrawer}>
           <CiAlignLeft size={20} />
@@ -90,11 +184,14 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
           onClose={isMoblie ? closeDrawer : undefined}
         >
           <div className="mb-2 flex items-center justify-between p-4 ">
-            <Link to={"/"}>
-              <Typography variant="h5" color="black" className="cursor-pointer">
-                EcomSphere
-              </Typography>
-            </Link>
+            <Button
+              onClick={handleHomePageClick}
+              size="lg"
+              color="teal"
+              className="cursor-pointer"
+            >
+              Go to Home Page
+            </Button>
             {isMoblie ? (
               <IconButton variant="text" color="black" onClick={closeDrawer}>
                 <svg
@@ -136,6 +233,23 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
             </ListItem>
             <ListItem
               className={` ${
+                showContent === "address" ? "text-black" : "text-white"
+              }`}
+              selected={showContent === "address" ? true : false}
+              onClick={() => {
+                if (isMoblie) {
+                  closeDrawer();
+                }
+                setShowContent("address");
+              }}
+            >
+              <ListItemPrefix>
+                <FaRegAddressBook size={20} />
+              </ListItemPrefix>
+              Address
+            </ListItem>
+            <ListItem
+              className={` ${
                 showContent === "myOrders" ? "text-black" : "text-white"
               }`}
               selected={showContent === "myOrders" ? true : false}
@@ -164,23 +278,6 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
               <ListItemSuffix>
                 <Chip value="5" size="sm" className="rounded-full" />
               </ListItemSuffix>
-            </ListItem>
-            <ListItem
-              className={` ${
-                showContent === "address" ? "text-black" : "text-white"
-              }`}
-              selected={showContent === "address" ? true : false}
-              onClick={() => {
-                if (isMoblie) {
-                  closeDrawer();
-                }
-                setShowContent("address");
-              }}
-            >
-              <ListItemPrefix>
-                <FaRegAddressBook size={20} />
-              </ListItemPrefix>
-              Address
             </ListItem>
             <ListItem
               className={` ${
@@ -234,7 +331,7 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
           </List>
         </Drawer>
 
-        <div className="flex justify-center  items-center w-full">
+        <div className="flex justify-center items-center w-full">
           {/* Account Settings */}
           {showContent === "accountSettings" && (
             <motion.div
@@ -244,9 +341,9 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
               transition={{
                 duration: 1.3,
               }}
-              className="justify-center  items-center w-full flex"
+              className="justify-center items-center w-full flex"
             >
-              <Card className="w-full  lg:w-[70%]  m-10" color="blue-gray">
+              <Card className="w-full lg:w-[70%] m-10" color="blue-gray">
                 <CardHeader
                   variant="gradient"
                   color="white"
@@ -265,23 +362,44 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
                     </motion.p>
                   </Typography>
                 </CardHeader>
-                <CardBody className="flex flex-col gap-4 ">
-                  <Typography variant="h6" color="white">
-                    Personal Information
-                  </Typography>
-                  <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
-                    <Input required label="Your Name" color="white" />
-                    <Input required label="Mobile No" color="white" />
-                  </div>
-                  <div className="lg:w-[49.3%]">
-                    <Input label="Password" required color="white" />
-                  </div>
-                </CardBody>
-                <CardFooter className="pt-0 w-full flex justify-center">
-                  <Button variant="gradient" color="white">
-                    Save Changes
-                  </Button>
-                </CardFooter>
+                <form onSubmit={handleAddMobile}>
+                  <CardBody className="flex flex-col gap-4 ">
+                    <Typography variant="h6" color="white">
+                      Personal Information
+                    </Typography>
+
+                    <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
+                      <Input
+                        label="Your Name"
+                        // value={userInfo.name}
+                        name="name"
+                        defaultValue={userInfo.name}
+                        color="white"
+                        required
+                      />
+                      <Input
+                        label="Mobile No"
+                        defaultValue={userInfo.mobile ? userInfo.mobile : ""}
+                        name="mobile"
+                        color="white"
+                        required
+                      />
+                    </div>
+                    {/* <div className="lg:w-[49.3%]">
+                    <Input
+                      label="Password"
+                      type="password"
+                      defaultValue={userInfo.password}
+                      color="white"
+                    />
+                  </div> */}
+                  </CardBody>
+                  <CardFooter className="pt-0 w-full flex justify-center">
+                    <Button variant="gradient" type="submit" color="white">
+                      Save Changes
+                    </Button>
+                  </CardFooter>
+                </form>
               </Card>
             </motion.div>
           )}
@@ -423,21 +541,83 @@ export const ProfilePage = ({ setIsAuthenticated }) => {
                         duration: 1.8,
                       }}
                     >
-                      Your Addresses
+                      Your Address
                     </motion.p>
                   </Typography>
                 </CardHeader>
-                <CardBody className="flex flex-col gap-4 ">
-                  <div className="lg:flex  lg:gap-2 space-y-4 lg:space-y-0">
-                    <Textarea label="Address 1" required />
-                    <Textarea label="Address 2" />
-                  </div>
-                </CardBody>
-                <CardFooter className="pt-0 w-full flex justify-center">
-                  <Button variant="gradient" color="blue-gray">
-                    Save Changes
-                  </Button>
-                </CardFooter>
+                <form onSubmit={handleAddressSubmit}>
+                  <CardBody className="flex flex-col gap-4 ">
+                    <div className="lg:flex lg:flex-col lg:gap-2 space-y-4 lg:space-y-0">
+                      {/* <Textarea label="Type your address here" /> */}
+                      {/* <Textarea label="Address 2" /> */}
+                      <div className="flex  lg:flex-row flex-col gap-3">
+                        <Input
+                          label="Address Line 1"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.line1 : ""
+                          }
+                          name="line1"
+                          color="black"
+                          required
+                        />
+                        <Input
+                          label="Address Line 2"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.line2 : ""
+                          }
+                          name="line2"
+                          color="black"
+                          required
+                        />
+                      </div>
+                      <div className="flex lg:flex-row flex-col gap-3">
+                        <Input
+                          label="City"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.city : ""
+                          }
+                          name="city"
+                          color="black"
+                          required
+                        />
+                        <Input
+                          label="State"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.state : ""
+                          }
+                          name="state"
+                          color="black"
+                          required
+                        />
+                      </div>
+                      <div className="flex lg:flex-row flex-col gap-3">
+                        <Input
+                          label="Postal Code"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.postalCode : ""
+                          }
+                          name="postalCode"
+                          color="black"
+                          required
+                        />
+                        <Input
+                          label="Country"
+                          defaultValue={
+                            userInfo.address ? userInfo.address.country : ""
+                          }
+                          name="country"
+                          color="black"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </CardBody>
+                  <CardFooter className="pt-0 w-full flex justify-center">
+                    <Button variant="gradient" type="submit" color="blue-gray">
+                      Save Changes
+                    </Button>
+                  </CardFooter>
+                </form>
               </Card>
             </motion.div>
           )}
