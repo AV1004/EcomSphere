@@ -55,4 +55,7 @@ router.get(
   isAuth,
   shopController.clearCartAndCreateOrder
 );
+
+router.get("/getOrders", isAuth, shopController.getOrdersOfUser);
+
 module.exports = router;

@@ -333,7 +333,7 @@ exports.goTOCheckoutStripe = async (req, res, next) => {
       customer: customer.id, // Use the created customer's ID
     });
 
-    res.json({
+    res.status(200).json({
       id: session.id,
     });
   } catch (error) {
@@ -352,7 +352,7 @@ exports.completeProfileMobile = (req, res, next) => {
       return user.save();
     })
     .then((result) => {
-      return res.json({
+      return res.status(200).json({
         message: "User updated successfully!",
         success: true,
       });
@@ -374,7 +374,7 @@ exports.changeAddress = (req, res, next) => {
       return user.save();
     })
     .then((result) => {
-      return res.json({
+      return res.status(200).json({
         message: "Address updated successfully!",
         success: true,
       });
@@ -416,6 +416,30 @@ exports.clearCartAndCreateOrder = (req, res, next) => {
     .then((result) => {
       return res.status(200).json({
         message: "Cart cleared and order created successfully!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.getOrdersOfUser = (req, res, next) => {
+  User.findById(req.userId)
+    .populate("orders")
+    .then((user) => {
+      if (!user) {
+        const error = new Error("Could not find User!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      return res.status(200).json({
+        orders: user.orders,
+        message: "Orders fetched successfully!",
         success: true,
       });
     })
