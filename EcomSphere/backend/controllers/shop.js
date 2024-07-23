@@ -428,17 +428,22 @@ exports.clearCartAndCreateOrder = (req, res, next) => {
 };
 
 exports.getOrdersOfUser = (req, res, next) => {
-  User.findById(req.userId)
-    .populate("orders")
-    .then((user) => {
-      if (!user) {
-        const error = new Error("Could not find User!");
-        error.statusCode = 404;
-        throw error;
-      }
+  Order.find({
+    user: req.userId,
+  })
+    .populate("orderItems.product")
+    .then((orders) => {
+      // User.findById(req.userId)
+      //   .populate("orders")
+      //   .then((user) => {
+      //     if (!user) {
+      //       const error = new Error("Could not find User!");
+      //       error.statusCode = 404;
+      //       throw error;
+      //     }
 
       return res.status(200).json({
-        orders: user.orders,
+        orders: orders,
         message: "Orders fetched successfully!",
         success: true,
       });

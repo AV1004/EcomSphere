@@ -214,7 +214,7 @@ export const fetchUser = async (authHeader) => {
   return resData;
 };
 
-// Add Mobile of user
+// Add?Change Mobile of user
 export const updateMobileAndName = async (mobile, name, authHeader) => {
   const res = await fetch(server + "/shop/updateUserMobileAndName", {
     method: "POST",
@@ -230,6 +230,7 @@ export const updateMobileAndName = async (mobile, name, authHeader) => {
   return resData;
 };
 
+// Add/Change Address
 export const changeAddress = async (address, authHeader) => {
   const res = await fetch(server + "/shop/updateAddress", {
     method: "POST",
@@ -245,6 +246,7 @@ export const changeAddress = async (address, authHeader) => {
   return resData;
 };
 
+// Clear Cart and add order
 export const clearCartAndCreateOrder = async (authHeader) => {
   const res = await fetch(server + "/shop/clearCartAndMadeOrder", {
     headers: {
@@ -252,6 +254,19 @@ export const clearCartAndCreateOrder = async (authHeader) => {
     },
   });
 
+  const resData = res.json();
+
+  return resData;
+};
+
+// Fetch Orders
+export const getUserOrders = async (authHeader) => {
+  const res = await fetch(server + "/shop/getOrders", {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+  
   const resData = res.json();
 
   return resData;
