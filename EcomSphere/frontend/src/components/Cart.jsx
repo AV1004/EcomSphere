@@ -125,7 +125,7 @@ export default function Cart() {
     const result = stripe.redirectToCheckout({
       sessionId: session.id,
     });
-    
+
     if (result.error) {
       console.log(result.error);
     }
@@ -230,7 +230,7 @@ export default function Cart() {
                                       color="white"
                                       className="font-bold"
                                     >
-                                      Price:${item.productId.price}
+                                      Price:₹{item.productId.price}
                                     </Typography>
                                     <button
                                       className="text-teal-700 w-16 font-semibold"
@@ -280,7 +280,7 @@ export default function Cart() {
                                   color="white"
                                   className="font-normal"
                                 >
-                                  ${item.productId.price * item.quantity}
+                                  ₹{item.productId.price * item.quantity}
                                 </Typography>
                               </td>
                             </motion.tr>
@@ -327,7 +327,7 @@ export default function Cart() {
                               </div>
                             </div>
                             <Typography color="white" variant="h6">
-                              ${totalCartValue}
+                              ₹{totalCartValue}
                             </Typography>
                           </div>
                         </div>

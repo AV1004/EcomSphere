@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
 import { motion } from "framer-motion";
-import { getUserOrders } from "../https/shop";
+import { getInvoiveForOrder, getUserOrders } from "../https/shop";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 
 export const MyOrders = () => {
@@ -39,6 +39,10 @@ export const MyOrders = () => {
     const day = String(date.getDate()).padStart(2, "0");
     const year = date.getFullYear();
     return `${month} ${day}, ${year}`;
+  };
+
+  const handleViewInvoice = async (orderId) => {
+    await getInvoiveForOrder(orderId, authHeader);
   };
 
   return (
@@ -122,7 +126,7 @@ export const MyOrders = () => {
                       className="mt-3 lg:text-md text-sm"
                       color="white"
                     >
-                      ${order.total}
+                      ₹{order.total}
                     </Typography>
                   </motion.div>
                   <motion.div
@@ -132,7 +136,13 @@ export const MyOrders = () => {
                     transition={{ duration: 1.5, delay: 1 }}
                     className="lg:w-full lg:items-start flex lg:justify-end"
                   >
-                    <Button color="teal" size="sm">
+                    <Button
+                      onClick={() => {
+                        handleViewInvoice(order._id);
+                      }}
+                      color="teal"
+                      size="sm"
+                    >
                       View Invoice
                     </Button>
                   </motion.div>
@@ -169,7 +179,7 @@ export const MyOrders = () => {
                           >
                             {orderItem.product.category}
                             <Typography variant="paragraph" color="teal">
-                              ${orderItem.product.price}
+                              ₹{orderItem.product.price}
                             </Typography>
                           </Typography>
 
@@ -195,7 +205,7 @@ export const MyOrders = () => {
                             variant="h4"
                             color="white"
                           >
-                            ${orderItem.product.price}
+                            ₹{orderItem.product.price}
                           </Typography>
                         </div>
                         <div>

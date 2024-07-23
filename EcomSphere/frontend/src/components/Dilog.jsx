@@ -58,7 +58,7 @@ export const Dilog = ({ openDilog, setOpenDilog, product }) => {
             {product.user !== undefined ? product.user.name : "Someone"}
           </Typography>
           <Typography color="white" variant="h5" className="lg:text-xl text-md">
-            Price:${product.price}
+            Price:₹{product.price}
           </Typography>
           <Typography color="white" variant="h6">
             {product.category !== undefined

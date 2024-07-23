@@ -6,9 +6,14 @@ const Order = require("../models/order");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
+
 // Fetch User Data
 exports.giveUserDataToFrontend = (req, res, next) => {
   User.findById(req.userId)
+    .populate("orders")
     .then((user) => {
       if (!user) {
         const error = new Error("Could not find user!");
@@ -454,4 +459,112 @@ exports.getOrdersOfUser = (req, res, next) => {
       }
       next(err);
     });
+};
+
+exports.getInvoice = (req, res, next) => {
+  const orderId = req.params.orderId;
+  Order.findById(orderId)
+    .populate("user")
+    .populate("orderItems.product")
+    .then((order) => {
+      if (!order) {
+        return next(new Error("No order found."));
+      }
+      if (order.user._id.toString() !== req.userId.toString()) {
+        return next(new Error("Unauthorized"));
+      }
+      const invoiceName = "invoice-" + orderId + ".pdf";
+      const invoicePath = path.join("data", "invoices", invoiceName);
+
+      const pdfDoc = new PDFDocument({ margin: 50 });
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        'inline; filename="' + invoiceName + '"'
+      );
+      pdfDoc.pipe(fs.createWriteStream(invoicePath));
+      pdfDoc.pipe(res);
+
+      // Header
+      pdfDoc
+        .image("images/favicon.png", { width: 50 })
+        .fontSize(26)
+        .text("ECOMSPHERE", { underline: true, align: "center" });
+
+      // Invoice details
+      pdfDoc
+        .moveDown()
+        .fontSize(14)
+        .text(`Order Number: ${orderId}`, { align: "right" })
+        .text(`Order Date: ${formatDate(order.createdAt)}`, {
+          align: "right",
+        });
+
+      // Billing information
+      pdfDoc
+        .moveDown()
+        .fontSize(20)
+        .text("Billing Information", { underline: true })
+        .moveDown()
+        .fontSize(12)
+        .text(`Name: ${order.user.name}`)
+        .text(`Email: ${order.user.email}`);
+
+      // Order details
+      pdfDoc
+        .moveDown()
+        .fontSize(20)
+        .text("Order Details", { underline: true })
+        .moveDown();
+
+      let totalPrice = 0;
+      order.orderItems.forEach((item, index) => {
+        totalPrice += item.quantity * item.product.price;
+        pdfDoc
+          .fontSize(12)
+          .text(
+            `${index + 1}. ${item.product.name} - ${item.quantity} x rs.${
+              item.product.price
+            }`
+          );
+      });
+
+      // Total price
+      pdfDoc
+        .moveDown()
+        .fontSize(16)
+        .text("Total Price", { underline: true })
+        .text(`rs.${totalPrice.toFixed(2)}`, { align: "right" });
+
+      // Footer
+      pdfDoc.moveDown().fontSize(12).text("Thank you for your purchase!", {
+        align: "center",
+        valign: "bottom",
+      });
+
+      pdfDoc.end();
+    })
+    .catch((err) => next(err));
+};
+
+const formatDate = (isoString) => {
+  const date = new Date(isoString);
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = monthNames[date.getMonth()];
+  const day = String(date.getDate()).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${month} ${day}, ${year}`;
 };

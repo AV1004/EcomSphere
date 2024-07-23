@@ -58,4 +58,6 @@ router.get(
 
 router.get("/getOrders", isAuth, shopController.getOrdersOfUser);
 
+router.get("/getInvoice/:orderId", isAuth, shopController.getInvoice);
+
 module.exports = router;

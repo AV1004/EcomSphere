@@ -14,7 +14,6 @@ import {
   CardBody,
   CardFooter,
   Input,
-  Textarea,
 } from "@material-tailwind/react";
 import { CiAlignLeft } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
@@ -30,44 +29,45 @@ import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import MessageDilog from "./MessageDilog";
 
 // Dummy Orders Table Data
-const TABLE_HEAD = ["Id", "Status", "Order Date", "Total", ""];
+const TABLE_HEAD = ["Id", "Order Date", "Total", ""];
 
-const TABLE_ROWS = [
-  {
-    id: "1234567890",
-    status: "Delivered",
-    date: "23/04/18",
-    total: 250,
-  },
-  {
-    id: "1234567891",
-    status: "Pending",
-    date: "23/04/18",
-    total: 1250,
-  },
-  {
-    id: "1234567892",
-    status: "Delivered",
-    date: "19/09/17",
-    total: 400,
-  },
-  {
-    id: "1234567893",
-    status: "Pending",
-    date: "24/12/08",
-    total: 4000,
-  },
-  {
-    id: "1234567894",
-    status: "Pending",
-    date: "04/10/21",
-    total: 1000,
-  },
-];
+// const TABLE_ROWS = [
+//   {
+//     id: "1234567890",
+//     status: "Delivered",
+//     date: "23/04/18",
+//     total: 250,
+//   },
+//   {
+//     id: "1234567891",
+//     status: "Pending",
+//     date: "23/04/18",
+//     total: 1250,
+//   },
+//   {
+//     id: "1234567892",
+//     status: "Delivered",
+//     date: "19/09/17",
+//     total: 400,
+//   },
+//   {
+//     id: "1234567893",
+//     status: "Pending",
+//     date: "24/12/08",
+//     total: 4000,
+//   },
+//   {
+//     id: "1234567894",
+//     status: "Pending",
+//     date: "04/10/21",
+//     total: 1000,
+//   },
+// ];
 
 export const ProfilePage = () => {
   const isMoblie = window.innerWidth < 768;
   const [validationMessage, setValidationMessage] = useState("");
+  const [TABLE_ROWS, setTABLE_ROWS] = useState([]);
   const [showDilog, setShowDilog] = useState(false);
   const [changesInValues, setChangesInValues] = useState(false);
   const [open, setOpen] = useState(false);
@@ -85,7 +85,8 @@ export const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const resUserData = await fetchUser(authHeader);
-      // console.log(resUserData.user);
+      // console.log(resUserData.user.orders);
+      setTABLE_ROWS(resUserData.user.orders);
       setUserInfo(resUserData.user);
     };
     fetchUserData();
@@ -276,7 +277,11 @@ export const ProfilePage = () => {
               </ListItemPrefix>
               My Orders
               <ListItemSuffix>
-                <Chip value="5" size="sm" className="rounded-full" />
+                <Chip
+                  value={TABLE_ROWS.length}
+                  size="sm"
+                  className="rounded-full"
+                />
               </ListItemSuffix>
             </ListItem>
             <ListItem
@@ -454,57 +459,50 @@ export const ProfilePage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {TABLE_ROWS.map(({ id, status, date, total }, index) => (
-                      <tr key={id} className="even:bg-blue-gray-50/50">
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {id}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {status}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {date}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal"
-                          >
-                            {total}
-                          </Typography>
-                        </td>
-                        <td className="p-4">
-                          <Typography
-                            as="a"
-                            href="#"
-                            variant="small"
-                            color="blue-gray"
-                            className="font-medium"
-                          >
-                            Get Invoice
-                          </Typography>
-                        </td>
-                      </tr>
-                    ))}
+                    {TABLE_ROWS.slice(0, 5).map(
+                      ({ _id, createdAt, total }, index) => (
+                        <tr key={_id} className="even:bg-blue-gray-50/50">
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {_id}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {createdAt}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {total}
+                            </Typography>
+                          </td>
+                          <td className="p-4">
+                            <Typography
+                              as="a"
+                              href="#"
+                              variant="small"
+                              color="blue-gray"
+                              className="font-medium"
+                            >
+                              Get Invoice
+                            </Typography>
+                          </td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </Card>

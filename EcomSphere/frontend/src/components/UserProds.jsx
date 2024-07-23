@@ -155,7 +155,7 @@ export default function UserProds() {
                         </Typography>
                         <div className="flex items-center justify-center mt-3">
                           <Typography variant="h3" color="black">
-                            ${product.price}
+                            ₹{product.price}
                           </Typography>
                         </div>
                         <div className="flex gap-2 justify-center items-center mt-3">

@@ -63,7 +63,7 @@ export const addProduct = async (
     }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -77,7 +77,7 @@ export const getuserProducts = async (authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -108,7 +108,7 @@ export const updatedUserProd = async (
     }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -122,7 +122,7 @@ export const deleteProduct = async (prodId, authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -135,7 +135,7 @@ export const getAllProducts = async (authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -151,7 +151,7 @@ export const addProductToCart = async (prodId, authHeader) => {
     body: JSON.stringify({ prodId: prodId }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -164,7 +164,7 @@ export const getCartItems = async (authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -180,7 +180,7 @@ export const decreaseFromCart = async (prodId, authHeader) => {
     body: JSON.stringify({ prodId: prodId }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -196,7 +196,7 @@ export const reomveProdFromCart = async (prodId, authHeader) => {
     body: JSON.stringify({ prodId: prodId }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -209,7 +209,7 @@ export const fetchUser = async (authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -225,7 +225,7 @@ export const updateMobileAndName = async (mobile, name, authHeader) => {
     body: JSON.stringify({ mobile: mobile, name: name }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -241,7 +241,7 @@ export const changeAddress = async (address, authHeader) => {
     body: JSON.stringify({ address: address }),
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -254,7 +254,7 @@ export const clearCartAndCreateOrder = async (authHeader) => {
     },
   });
 
-  const resData = res.json();
+  const resData = await res.json();
 
   return resData;
 };
@@ -266,8 +266,26 @@ export const getUserOrders = async (authHeader) => {
       Authorization: authHeader,
     },
   });
-  
-  const resData = res.json();
+
+  const resData = await res.json();
 
   return resData;
+};
+
+// Get Invoice
+export const getInvoiveForOrder = async (orderId, authHeader) => {
+  const res = await fetch(server + "/shop//getInvoice/" + orderId, {
+    headers: {
+      Authorization: authHeader,
+    },
+  });
+
+  if (!res.ok) {
+    console.error("Failed to fetch invoice");
+    return;
+  }
+
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  window.open(url);
 };
