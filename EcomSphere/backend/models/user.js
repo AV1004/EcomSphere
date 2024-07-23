@@ -47,6 +47,8 @@ const userSchema = new Schema(
         ref: "Product",
       },
     ],
+    resetToken: String,
+    resetTokenExpiration: Date,
   },
   { timestamps: true }
 );

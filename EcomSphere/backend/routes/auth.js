@@ -52,4 +52,24 @@ router.post(
   authController.login
 );
 
+router.post(
+  "/resetPassword",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email.")
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (!userDoc) {
+            return Promise.reject("User does not exists!");
+          }
+        });
+      })
+      .normalizeEmail(),
+  ],
+  authController.postReset
+);
+
+router.post("/setNewPassword", authController.setNewPassword);
+
 module.exports = router;

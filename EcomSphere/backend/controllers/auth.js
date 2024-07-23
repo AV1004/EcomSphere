@@ -1,9 +1,20 @@
+const crypto = require("crypto");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const User = require("../models/user");
 const OTP = require("../models/otp");
+
+let transporter = nodemailer.createTransport({
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
 
 exports.signUp = async (req, res, next) => {
   const errors = validationResult(req);
@@ -127,14 +138,111 @@ exports.login = async (req, res, next) => {
         { expiresIn: "1h" }
       );
 
-      res
-        .status(200)
-        .json({
-          token: token,
-          userId: loadedUser._id.toString(),
-          success: true,
-          message: "Logged in successfully!",
+      res.status(200).json({
+        token: token,
+        userId: loadedUser._id.toString(),
+        success: true,
+        message: "Logged in successfully!",
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};
+
+exports.postReset = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.errors);
+    const error = new Error(errors.errors[0].msg);
+    // Unprocessable Entity!
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+
+  let userId;
+
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect("/reset");
+    }
+    const token = buffer.toString("hex");
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          const error = new Error("User does not exists!");
+          error.statusCode = 401;
+          throw error;
+        }
+        userId = user._id;
+
+        user.resetToken = token;
+        user.resetTokenExpiration = Date.now() + 3600000;
+        return user.save();
+      })
+      .then(() => {
+        transporter.sendMail({
+          from: '"EcomSphere🛒" ecomsphere@gmail.com',
+          to: req.body.email,
+          subject: "Request to change password of EcomSphere🛒",
+          html: `<h1>You requested to reset your password</h1>
+          <p>Click this <a href="http://localhost:5173/reset/${userId}/${token}">Reset Password</a> to set a new password.</p>
+          `,
         });
+      })
+      .then(() => {
+        return res.status(200).json({
+          success: true,
+          message: "Email sent you to reset password.",
+        });
+      })
+      .catch((err) => {
+        if (!err.statusCode) {
+          err.statusCode = 500;
+        }
+        next(err);
+      });
+  });
+};
+
+exports.setNewPassword = (req, res, next) => {
+  const { userId, newPassword, token } = req.body;
+
+  console.log(userId, newPassword, token);
+
+  let resetUser;
+  User.findOne({
+    _id: userId,
+    resetToken: token,
+    resetTokenExpiration: { $gt: Date.now() },
+  })
+    .then((user) => {
+      if (!user) {
+        const error = new Error("User does not exists or  token is expired!");
+        error.statusCode = 401;
+        throw error;
+      }
+
+      resetUser = user;
+      return bcrypt.hash(newPassword, 12);
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword;
+      resetUser.resetToken = undefined;
+      resetUser.resetTokenExpiration = undefined;
+      return resetUser.save();
+    })
+    .then((result) => {
+      return res.status(200).json({
+        success: true,
+        message: "Password reset successfully.",
+      });
     })
     .catch((err) => {
       if (!err.statusCode) {

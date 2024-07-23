@@ -64,3 +64,39 @@ export const login = async (email, password, otp) => {
 
   return resData;
 };
+
+// Req to send mail to Reset Password
+
+export const resetPassword = async (email) => {
+  const res = await fetch(server + "/auth/resetPassword", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      email: email,
+    }),
+  });
+
+  const resData = await res.json();
+
+  return resData;
+};
+
+export const changePassword = async (userId, newPassword, token) => {
+  const res = await fetch(server + "/auth/setNewPassword", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: userId,
+      newPassword: newPassword,
+      token: token,
+    }),
+  });
+
+  const resData = await res.json();
+
+  return resData;
+};

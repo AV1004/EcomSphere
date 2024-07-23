@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GoHomeFill } from "react-icons/go";
 import MessageDilog from "./MessageDilog";
-import { sendOTP } from "../https/auth";
+import { resetPassword, sendOTP } from "../https/auth";
 import { OTP } from "./OTP";
 
 export const SignIn = () => {
@@ -12,6 +12,7 @@ export const SignIn = () => {
     useState(null);
   const [openDilog, setOpenDilog] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
+  const [email, setEmail] = useState("");
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -37,6 +38,23 @@ export const SignIn = () => {
           // otp: OTPData.otp,
           isLogin: true,
         });
+      }
+    }
+  };
+
+  const forgetPassHandler = async () => {
+    if (email.length === 0) {
+      setValidationMessage("Please enter your mail address!");
+      setOpenDilog(true);
+    } else {
+      // console.log(email);
+      const forgetPassResData = await resetPassword(email);
+      if (forgetPassResData.success === true) {
+        setValidationMessage(forgetPassResData.message);
+        setOpenDilog(true);
+      } else {
+        setValidationMessage(forgetPassResData.message);
+        setOpenDilog(true);
       }
     }
   };
@@ -88,6 +106,9 @@ export const SignIn = () => {
                     placeholder="john@mail.com"
                     color="white"
                     className=" !border-t-blue-gray-200 focus:!border-t-white"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
                     labelProps={{
                       className: "before:content-none after:content-none",
                     }}
@@ -107,6 +128,9 @@ export const SignIn = () => {
                     }}
                   />
                 </div>
+                <button className="mt-2" onClick={forgetPassHandler}>
+                  Forget Password?
+                </button>
 
                 {/* <Link to={"/signin/otp"}> */}
                 <Button className="mt-6" type="submit" color="white" fullWidth>

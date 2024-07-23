@@ -15,6 +15,7 @@ import { MyOrders } from "./components/MyOrders";
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import AfterCheckout from "./components/AfterCheckout";
+import ChangePass from "./components/ChangePass";
 
 function App() {
   const [started, setStarted] = useState(false);
@@ -34,6 +35,10 @@ function App() {
             <Route path="/yourProducts" element={<UserProds />} />
             <Route path="/orders" element={<MyOrders />} />
           </Route>
+        </Route>
+
+        <Route>
+          <Route path="/reset/:userId/:token" element={<ChangePass />} />
         </Route>
 
         <Route path="/signup" element={<Root2 />}>

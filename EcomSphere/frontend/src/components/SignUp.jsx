@@ -38,7 +38,7 @@ export const SignUp = () => {
       setValidationMessage("Please enter password with minimum 8 characters.");
       setOpenDilog(true);
     } else if (data.password !== data.confirmPass) {
-      setValidationMessage("Passwords do not match!");
+      setValidationMessage("Passwords does not match!");
       setOpenDilog(true);
     } else {
       const OTPData = await sendOTP(data.email, false);
