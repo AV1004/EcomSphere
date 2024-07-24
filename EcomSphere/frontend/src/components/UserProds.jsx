@@ -18,6 +18,7 @@ import {
   getuserProducts,
 } from "../https/shop";
 import MessageDilog from "./MessageDilog";
+import dontHaveUserProds from "/images/dontHaveUserProds.png";
 
 export default function UserProds() {
   const [products, setProducts] = useState([]);
@@ -117,9 +118,22 @@ export default function UserProds() {
 
           <div className="mt-4 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
             {products.length === 0 && showFallBackText === true ? (
-              <Typography color="white" className="lg:text-3xl text-xl">
-                You did not add any product yet!
-              </Typography>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.3 }}
+                className="pointer-events-auto  flex flex-col gap-3 justify-center items-center h-full"
+              >
+                <img
+                  src={dontHaveUserProds}
+                  alt={"dontHaveUserProds"}
+                  className="lg:h-96 lg:w-96 h-60 w-60 lg:mt-2 mt-16"
+                />
+                <Typography color="white" className="lg:text-2xl text-md">
+                  DON'T HAVE YOUR PRODUCTS YET
+                </Typography>
+              </motion.div>
             ) : (
               products.map((product, index) => {
                 return (

@@ -49,6 +49,14 @@ export default function ProductsPage() {
     }
   };
 
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
   return (
     <>
       <div className="fixed inset-0 pointer-events-none">
@@ -167,7 +175,7 @@ export default function ProductsPage() {
           </motion.div>
           <div className="lg:mt-3 mt-5 flex flex-wrap gap-36  mr-14 items-center w-full justify-center overflow-auto pointer-events-auto scrollbar-thin scrollbar-webkit">
             {whatToSee === "All Products"
-              ? products.map((product, index) => (
+              ? shuffleArray(products).map((product, index) => (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, y: 0 }}

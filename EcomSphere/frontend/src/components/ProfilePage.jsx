@@ -27,6 +27,7 @@ import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { changeAddress, fetchUser, updateMobileAndName } from "../https/shop";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import MessageDilog from "./MessageDilog";
+import notHaveOrders from "/images/notHaveOrders.png";
 
 // Dummy Orders Table Data
 const TABLE_HEAD = ["Id", "Order Date", "Total", ""];
@@ -103,7 +104,7 @@ export const ProfilePage = () => {
       validationMessage === "" ||
       (userInfo.address !== undefined && userInfo.mobile !== undefined)
     ) {
-      navigate("/");
+      navigate("/products");
     } else {
       setShowDilog(true);
     }
@@ -188,10 +189,10 @@ export const ProfilePage = () => {
             <Button
               onClick={handleHomePageClick}
               size="lg"
-              color="teal"
+              color="white"
               className="cursor-pointer"
             >
-              Go to Home Page
+              Explore Products
             </Button>
             {isMoblie ? (
               <IconButton variant="text" color="black" onClick={closeDrawer}>
@@ -301,7 +302,7 @@ export const ProfilePage = () => {
               </ListItemPrefix>
               Legal Notice
             </ListItem>
-            <ListItem
+            {/* <ListItem
               className={` ${
                 showContent === "changePass" ? "text-black" : "text-white"
               }`}
@@ -317,7 +318,7 @@ export const ProfilePage = () => {
                 <TbPasswordFingerprint size={20} />
               </ListItemPrefix>
               Change Password
-            </ListItem>
+            </ListItem> */}
             <ListItem
               className={` ${
                 showContent === "changePass" ? "text-black" : "text-white"
@@ -419,98 +420,121 @@ export const ProfilePage = () => {
               }}
               className="lg:flex lg:flex-col w-full lg:items-center"
             >
-              <Typography
-                color="white"
-                className="underline underline-offset-8 flex items-center justify-center"
-                variant="h3"
-              >
-                <motion.p
-                  initial={{ opacity: 0, y: -50 }}
+              {TABLE_ROWS.length === 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 20 }}
-                  transition={{
-                    duration: 1.8,
-                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.3 }}
+                  className="pointer-events-auto  flex flex-col gap-3 justify-center items-center h-full"
                 >
-                  Recent Orders
-                </motion.p>
-              </Typography>
-              <Card
-                className="m-10  lg:h-[60%] lg:w-[60%]  overflow-scroll lg:overflow-hidden"
-                color="blue-gray"
-              >
-                <table className="w-full min-w-max table-auto text-left">
-                  <thead>
-                    <tr>
-                      {TABLE_HEAD.map((head) => (
-                        <th
-                          key={head}
-                          className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                        >
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal leading-none opacity-70"
-                          >
-                            {head}
-                          </Typography>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {TABLE_ROWS.slice(0, 5).map(
-                      ({ _id, createdAt, total }, index) => (
-                        <tr key={_id} className="even:bg-blue-gray-50/50">
-                          <td className="p-4">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
+                  <img
+                    src={notHaveOrders}
+                    alt={"notHaveOrders"}
+                    className="lg:h-96 lg:w-96 h-60 w-60"
+                  />
+                  <Typography color="white" className="lg:tex-4xl text-xl">
+                    DON'T HAVE ORDERS HISTORY
+                  </Typography>
+                </motion.div>
+              ) : (
+                <>
+                  <Typography
+                    color="white"
+                    className="underline underline-offset-8 flex items-center justify-center"
+                    variant="h3"
+                  >
+                    <motion.p
+                      initial={{ opacity: 0, y: -50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 20 }}
+                      transition={{
+                        duration: 1.8,
+                      }}
+                    >
+                      Recent Orders
+                    </motion.p>
+                  </Typography>
+                  <Card
+                    className="m-10  lg:h-[60%] lg:w-[60%]  overflow-scroll lg:overflow-hidden"
+                    color={
+                      TABLE_ROWS.length === 0 ? "transparent" : "blue-gray"
+                    }
+                  >
+                    <table className="w-full min-w-max table-auto text-left">
+                      <thead>
+                        <tr>
+                          {TABLE_HEAD.map((head) => (
+                            <th
+                              key={head}
+                              className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
                             >
-                              {_id}
-                            </Typography>
-                          </td>
-                          <td className="p-4">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {createdAt}
-                            </Typography>
-                          </td>
-                          <td className="p-4">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {total}
-                            </Typography>
-                          </td>
-                          <td className="p-4">
-                            <Typography
-                              as="a"
-                              href="#"
-                              variant="small"
-                              color="blue-gray"
-                              className="font-medium"
-                            >
-                              Get Invoice
-                            </Typography>
-                          </td>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal leading-none opacity-70"
+                              >
+                                {head}
+                              </Typography>
+                            </th>
+                          ))}
                         </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </Card>
-              <div className="flex justify-center items-center">
-                <Link to={"/orders"}>
-                  <Button color="white">Show More</Button>
-                </Link>
-              </div>
+                      </thead>
+                      <tbody>
+                        {TABLE_ROWS.slice(0, 5).map(
+                          ({ _id, createdAt, total }, index) => (
+                            <tr key={_id} className="even:bg-blue-gray-50/50">
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {_id}
+                                </Typography>
+                              </td>
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {createdAt}
+                                </Typography>
+                              </td>
+                              <td className="p-4">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {total}
+                                </Typography>
+                              </td>
+                              <td className="p-4">
+                                <Typography
+                                  as="a"
+                                  href="#"
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-medium"
+                                >
+                                  Get Invoice
+                                </Typography>
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </Card>
+                  <div className="flex justify-center items-center">
+                    <Link to={"/orders"}>
+                      <Button color="white">Show More</Button>
+                    </Link>
+                  </div>
+                </>
+              )}
             </motion.div>
           )}
           {/* Addresses */}
