@@ -274,7 +274,7 @@ export const getUserOrders = async (authHeader) => {
 
 // Get Invoice
 export const getInvoiveForOrder = async (orderId, authHeader) => {
-  const res = await fetch(server + "/shop//getInvoice/" + orderId, {
+  const res = await fetch(server + "/shop/getInvoice/" + orderId, {
     headers: {
       Authorization: authHeader,
     },

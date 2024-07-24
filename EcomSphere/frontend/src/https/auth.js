@@ -1,4 +1,5 @@
 export const server = "http://localhost:8080";
+// export const server = "http://localhost:8080";
 
 // function to sendOTP
 export const sendOTP = async (email, isLogin, password) => {
