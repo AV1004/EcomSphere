@@ -273,19 +273,19 @@ export const getUserOrders = async (authHeader) => {
 };
 
 // Get Invoice
-export const getInvoiveForOrder = async (orderId, authHeader) => {
-  const res = await fetch(server + "/shop/getInvoice/" + orderId, {
-    headers: {
-      Authorization: authHeader,
-    },
-  });
+// export const getInvoiveForOrder = async (orderId, authHeader) => {
+//   const res = await fetch(server + "/shop/getInvoice/" + orderId, {
+//     headers: {
+//       Authorization: authHeader,
+//     },
+//   });
 
-  if (!res.ok) {
-    console.error("Failed to fetch invoice");
-    return;
-  }
+//   if (!res.ok) {
+//     console.error("Failed to fetch invoice");
+//     return;
+//   }
 
-  const blob = await res.blob();
-  const url = window.URL.createObjectURL(blob);
-  window.open(url);
-};
+//   const blob = await res.blob();
+//   const url = window.URL.createObjectURL(blob);
+//   window.open(url);
+// };

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Typography, Button } from "@material-tailwind/react";
 import { motion } from "framer-motion";
-import { getInvoiveForOrder, getUserOrders } from "../https/shop";
+import { getUserOrders } from "../https/shop";
 import useAuthHeader from "react-auth-kit/hooks/useAuthHeader";
 import { Link } from "react-router-dom";
 import notHaveOrders from "/images/notHaveOrders.png";
+import ShowInvoice from "./ShowInvoice";
 
 export const MyOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [openDilog, setOpenDilog] = useState(false);
+  const [orderToGetInvoice, setOrderToGetInvoice] = useState({});
   const [showFallBackText, setshowFallBackText] = useState(false);
   const authHeader = useAuthHeader();
 
@@ -48,7 +51,15 @@ export const MyOrders = () => {
   };
 
   const handleViewInvoice = async (orderId) => {
-    await getInvoiveForOrder(orderId, authHeader);
+    // await getInvoiveForOrder(orderId, authHeader);
+    const orderToPrintInvoice = orders.find((order) => {
+      if (order._id === orderId) {
+        return order;
+      }
+    });
+    setOrderToGetInvoice(orderToPrintInvoice);
+    // console.log(orderToGetInvoice);
+    setOpenDilog(true);
   };
 
   return (
@@ -205,13 +216,12 @@ export const MyOrders = () => {
                               variant="h6"
                             >
                               {orderItem.product.category}
-                              <Typography variant="paragraph" color="teal">
-                                ₹{orderItem.product.price}
-                              </Typography>
                             </Typography>
-
                             <Typography color="white">
                               Quantity:{orderItem.quantity}
+                            </Typography>
+                            <Typography variant="paragraph" color="teal">
+                              ₹{orderItem.product.price}
                             </Typography>
                           </div>
                         </div>
@@ -253,6 +263,11 @@ export const MyOrders = () => {
           )}
         </div>
       </section>
+      <ShowInvoice
+        openDilog={openDilog}
+        setOpenDilog={setOpenDilog}
+        order={orderToGetInvoice}
+      />
     </div>
   );
 };

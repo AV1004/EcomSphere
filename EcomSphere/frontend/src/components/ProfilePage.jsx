@@ -508,7 +508,7 @@ export const ProfilePage = () => {
                                   color="blue-gray"
                                   className="font-normal"
                                 >
-                                  {total}
+                                  {total}₹
                                 </Typography>
                               </td>
                             </tr>

@@ -437,6 +437,7 @@ exports.getOrdersOfUser = (req, res, next) => {
     user: req.userId,
   })
     .populate("orderItems.product")
+    .populate("user")
     .then((orders) => {
       // User.findById(req.userId)
       //   .populate("orders")
