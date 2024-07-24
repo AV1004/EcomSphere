@@ -30,7 +30,7 @@ import MessageDilog from "./MessageDilog";
 import notHaveOrders from "/images/notHaveOrders.png";
 
 // Dummy Orders Table Data
-const TABLE_HEAD = ["Id", "Order Date", "Total", ""];
+const TABLE_HEAD = ["Id", "Order Date", "Total"];
 
 // const TABLE_ROWS = [
 //   {
@@ -509,17 +509,6 @@ export const ProfilePage = () => {
                                   className="font-normal"
                                 >
                                   {total}
-                                </Typography>
-                              </td>
-                              <td className="p-4">
-                                <Typography
-                                  as="a"
-                                  href="#"
-                                  variant="small"
-                                  color="blue-gray"
-                                  className="font-medium"
-                                >
-                                  Get Invoice
                                 </Typography>
                               </td>
                             </tr>

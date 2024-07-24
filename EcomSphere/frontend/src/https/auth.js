@@ -1,4 +1,4 @@
-export const server = "http://localhost:8080";
+export const server = "https://ecom-sphere-api.vercel.app";
 // export const server = "http://localhost:8080";
 
 // function to sendOTP
