@@ -333,8 +333,8 @@ exports.goTOCheckoutStripe = async (req, res, next) => {
       payment_method_types: ["card"],
       mode: "payment",
       line_items: lineItems,
-      success_url: "http://localhost:5173/checkout/success",
-      cancel_url: "http://localhost:5173/checkout/fail",
+      success_url: "https://ecom-sphere.vercel.app/checkout/success",
+      cancel_url: "https://ecom-sphere.vercel.app/checkout/fail",
       customer: customer.id, // Use the created customer's ID
     });
 
@@ -482,7 +482,10 @@ exports.getInvoice = (req, res, next) => {
         "Content-Disposition",
         'inline; filename="' + invoiceName + '"'
       );
-      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader(
+        "Access-Control-Allow-Origin",
+        "https://ecom-sphere.vercel.app"
+      );
       res.setHeader(
         "Access-Control-Allow-Methods",
         "OPTIONS, GET, POST, PUT, PATCH, DELETE"
