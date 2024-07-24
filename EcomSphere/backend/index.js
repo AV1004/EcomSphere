@@ -21,8 +21,8 @@ app.use(cors());
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    // "https://ecom-sphere.vercel.app"
-    "http://localhost:5173"
+    "https://ecom-sphere.vercel.app"
+    // "http://localhost:5173"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
