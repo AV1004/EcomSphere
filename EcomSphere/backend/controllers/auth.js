@@ -192,7 +192,7 @@ exports.postReset = (req, res, next) => {
           to: req.body.email,
           subject: "Request to change password of EcomSphere🛒",
           html: `<h1>You requested to reset your password</h1>
-          <p>Click this <a href="http://localhost:5173/reset/${userId}/${token}">Reset Password</a> to set a new password.</p>
+          <p>Click this <a href="https://ecom-sphere.vercel.app/reset/${userId}/${token}">Reset Password</a> to set a new password.</p>
           `,
         });
       })
