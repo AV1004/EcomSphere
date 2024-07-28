@@ -251,3 +251,39 @@ exports.setNewPassword = (req, res, next) => {
       next(err);
     });
 };
+
+exports.giveUserData = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors.errors);
+    const error = new Error(errors.errors[0].msg);
+    // Unprocessable Entity!
+    error.statusCode = 422;
+    error.data = errors.array();
+    throw error;
+  }
+
+  const { userId } = req.body;
+
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error("Could not find user!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      return res.status(200).json({
+        user: user,
+        message: "User fetched successfully using userId!",
+        success: true,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+};

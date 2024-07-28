@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { login, register, sendOTP } from "../https/auth";
+import { getUserDataUsingId, login, register, sendOTP } from "../https/auth";
 import MessageDilog from "./MessageDilog";
 import Timer from "./Timer";
 import useSignIn from "react-auth-kit/hooks/useSignIn";
@@ -12,6 +12,7 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
   const [openDilog, setOpenDilog] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
   const [duration, setDuration] = useState(1 * 60 * 1000);
+  const [userDetails, setUserDetails] = useState(undefined);
 
   const [resendEnable, setResendEnable] = useState(false);
 
@@ -58,6 +59,11 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
           },
         });
 
+        const resUserData = await getUserDataUsingId(loginResData.userId);
+
+        // console.log(resUserData.user);
+        setUserDetails(resUserData.user);
+
         setValidationMessage("Logged in successfully!");
         setIsVerify(true);
         setOpenDilog(true);
@@ -76,7 +82,15 @@ export const OTP = ({ type, setIsAuthenticated, data }) => {
       openDilog === false &&
       data.isLogin === true
     ) {
-      navigate("/profile");
+      if (
+        userDetails !== undefined &&
+        userDetails.address !== undefined &&
+        userDetails.mobile !== undefined
+      ) {
+        navigate("/products");
+      } else {
+        navigate("/profile");
+      }
     }
   }, [isVerify, openDilog]);
 

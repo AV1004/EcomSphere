@@ -101,3 +101,20 @@ export const changePassword = async (userId, newPassword, token) => {
 
   return resData;
 };
+
+// FetchUserUsing Id
+export const getUserDataUsingId = async (userId) => {
+  const res = await fetch(server + "/auth/getUserDetailUsingId", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: userId,
+    }),
+  });
+
+  const resData = await res.json();
+
+  return resData;
+};

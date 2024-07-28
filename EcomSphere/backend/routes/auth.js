@@ -72,4 +72,18 @@ router.post(
 
 router.post("/setNewPassword", authController.setNewPassword);
 
+router.post(
+  "/getUserDetailUsingId",
+  [
+    body("userId").custom((value, { req }) => {
+      return User.findOne({ _id: value }).then((userDoc) => {
+        if (!userDoc) {
+          return Promise.reject("User does not exists!");
+        }
+      });
+    }),
+  ],
+  authController.giveUserData
+);
+
 module.exports = router;
